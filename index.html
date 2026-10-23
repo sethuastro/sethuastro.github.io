@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sethulekshmi · Astrophysics</title>
+<meta name="description" content="Sethulekshmi, MSc Astrophysics, University of Hertfordshire. [CI] diagnostics of molecular gas in the z = 4.42 submillimetre galaxy SGP 38326, and modelling of CMB decoupling. Seeking a funded PhD for September 2027.">
+<meta name="author" content="Sethulekshmi">
+<link rel="canonical" href="https://sethuastro.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sethuastro.github.io/">
+<meta property="og:title" content="Sethulekshmi · Astrophysics">
+<meta property="og:description" content="MSc Astrophysics, University of Hertfordshire. Cold gas in dusty starburst galaxies at z = 4.42, and the physics of CMB decoupling.">
+<meta property="og:site_name" content="Sethulekshmi · Astrophysics">
+<meta property="og:locale" content="en_GB">
+<meta name="twitter:card" content="summary">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single reading column with a left margin rail for section labels; hero carries a live-drawn [CI] spectrum at the target's redshift */
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  color-scheme:light;
+  --bg:#f3f4f7;
+  --surface:#ffffff;
+  --ink:#1b2340;
+  --muted:#5b6380;
+  --rule:#d9dce6;
+  --accent:#b4531f;      /* far-infrared amber */
+  --accent-soft:#f3e3d7;
+  --cool:#2e4a8a;        /* millimetre blue */
+  --f-display:"Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --f-body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1322; --surface:#161b2e; --ink:#e6e8f0; --muted:#9aa1bb; --rule:#2a3150;
+    --accent:#e8935e; --accent-soft:#3a2618; --cool:#8fa8e6; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1322; --surface:#161b2e; --ink:#e6e8f0; --muted:#9aa1bb; --rule:#2a3150;
+  --accent:#e8935e; --accent-soft:#3a2618; --cool:#8fa8e6; color-scheme:dark;
+}
+
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1rem;line-height:1.65;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
+  padding-bottom:env(safe-area-inset-bottom, 0px)}
+img,svg{max-width:100%}
+.wrap{max-width:62rem;margin:0 auto;padding-block:3rem 4rem;}
+a{color:var(--cool);text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{color:var(--accent)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+/* nav */
+nav{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;justify-content:space-between;align-items:baseline;
+  font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+  border-bottom:1px solid var(--rule);padding-bottom:.9rem}
+nav .links{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}
+nav a{color:var(--muted);text-decoration:none}
+nav a:hover{color:var(--ink)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:2.5rem;align-items:end;padding-block:3.5rem 3rem}
+.hero h1{font-family:var(--f-display);font-weight:400;font-size:clamp(2.8rem,7vw,4.6rem);line-height:1;letter-spacing:-.01em;margin:0 0 1rem;text-wrap:balance}
+.hero .role{font-size:1.12rem;color:var(--ink);max-width:34rem;margin:0 0 .9rem}
+.hero .role em{font-family:var(--f-display);font-size:1.25em;color:var(--accent)}
+.hero .meta{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);margin:0}
+.spec{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:1rem 1rem .7rem;min-width:0}
+.spec-head{display:flex;justify-content:space-between;gap:1rem;font-family:var(--f-mono);font-size:.72rem;color:var(--muted);letter-spacing:.04em;margin-bottom:.4rem}
+.spec svg{display:block;width:100%;height:auto;overflow:visible}
+.spec .axis{stroke:var(--rule);stroke-width:1}
+.spec .trace{fill:none;stroke:var(--ink);stroke-width:1.3}
+.spec .fit{fill:none;stroke:var(--accent);stroke-width:2}
+.spec text{font-family:var(--f-mono);font-size:10px;fill:var(--muted)}
+.spec text.lbl{fill:var(--accent);font-size:10.5px}
+.spec figcaption{font-size:.78rem;color:var(--muted);margin-top:.5rem;line-height:1.5}
+
+/* sections */
+section{display:grid;grid-template-columns:11rem minmax(0,1fr);gap:1.5rem 2.5rem;padding-block:2.6rem;border-top:1px solid var(--rule)}
+section > h2{font-family:var(--f-mono);font-weight:500;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:.45rem 0 0}
+.body{min-width:0;max-width:40rem}
+.body p{margin:0 0 1rem}
+.body h3{font-family:var(--f-display);font-weight:400;font-size:1.75rem;line-height:1.15;margin:0 0 .6rem;text-wrap:balance}
+.lede{font-family:var(--f-display);font-size:1.6rem;line-height:1.3;margin:0 0 1.2rem;text-wrap:balance}
+
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:6px;overflow:hidden;margin:1.4rem 0}
+.facts div{background:var(--surface);padding:.85rem 1rem}
+.facts dt{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.facts dd{margin:.2rem 0 0;font-family:var(--f-mono);font-size:1rem;font-variant-numeric:tabular-nums}
+.facts dd sub,.facts dd sup{font-size:.7em}
+
+.tags{display:flex;flex-wrap:wrap;gap:.45rem;padding:0;margin:0;list-style:none}
+.tags li{font-size:.82rem;padding:.25rem .65rem;border:1px solid var(--rule);border-radius:99px;color:var(--muted)}
+
+.list{list-style:none;margin:0;padding:0;display:grid;gap:1.4rem}
+.list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.2rem 1rem}
+.list .t{font-weight:600}
+.list .w{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);white-space:nowrap}
+.list .d{grid-column:1/-1;color:var(--muted);font-size:.95rem}
+
+.status{display:inline-block;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent);padding:.15rem .5rem;border-radius:3px;margin-left:.4rem;vertical-align:2px}
+
+.contact{display:grid;gap:.7rem;margin:0;padding:0;list-style:none}
+.contact li{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:1rem;align-items:baseline}
+.contact li > :last-child{min-width:0;overflow-wrap:anywhere}
+.contact .k{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.contact .email{font-family:var(--f-mono);font-size:.92rem;user-select:all;-webkit-user-select:all}
+.todo{color:var(--muted);font-style:italic}
+
+footer{border-top:1px solid var(--rule);padding-top:1.2rem;font-family:var(--f-mono);font-size:.74rem;color:var(--muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem}
+
+@media (max-width:760px){
+  .hero{grid-template-columns:minmax(0,1fr);padding-block:2.2rem 2rem;gap:1.8rem}
+  section{grid-template-columns:minmax(0,1fr);gap:.8rem}
+  .facts{grid-template-columns:minmax(0,1fr)}
+  .list li{grid-template-columns:minmax(0,1fr)}
+  .list .w{white-space:normal}
+}
+@media (prefers-reduced-motion: no-preference){
+  .spec .fit{stroke-dasharray:var(--len,0);stroke-dashoffset:0;transition:stroke-dashoffset 1.6s ease-out}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <span>Sethulekshmi</span>
+    <div class="links">
+      <a href="#research">Research</a>
+      <a href="#projects">Projects</a>
+      <a href="#background">Background</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <h1>Sethulekshmi</h1>
+      <p class="role">MSc Astrophysics, University of Hertfordshire. I study the cold gas in <em>dusty starburst galaxies</em> seen when the universe was about 1.4 billion years old.</p>
+      <p class="meta">Seeking a funded PhD · September 2027 entry</p>
+    </div>
+
+    <figure class="spec" style="margin:0">
+      <div class="spec-head"><span>SGP 38326 · SMG1</span><span>z = 4.4237</span></div>
+      <svg id="spectrum" viewBox="0 0 360 170" role="img" aria-label="Schematic spectrum showing the [CI] 1–0 and 2–1 carbon lines redshifted into ALMA Bands 3 and 4"></svg>
+      <figcaption>Neutral carbon lines emitted at 492 and 809&nbsp;GHz arrive at ALMA redshifted to about 90.7 and 149.2&nbsp;GHz. Schematic profile.</figcaption>
+    </figure>
+  </header>
+
+  <section id="research">
+    <h2>Research</h2>
+    <div class="body">
+      <p class="lede">How much molecular gas fuels a galaxy forming stars at a ferocious rate, less than 1.5 billion years after the Big Bang?</p>
+      <h3>[CI] diagnostics of SGP&nbsp;38326</h3>
+      <p>My MSc project analyses ALMA observations (programme 2017.1.00510.S) of the submillimetre galaxy SGP&nbsp;38326. Neutral atomic carbon is a clean tracer of molecular gas at high redshift, so I measure both [CI] transitions to derive the excitation temperature, carbon mass and total molecular gas mass.</p>
+      <p>I built the analysis pipeline in Python and validated it by reproducing the published results of Franco et al. for a comparison source before applying it to my own target. The pipeline handles CMB correction of line luminosities, iterative solution for the excitation temperature, and Monte Carlo error propagation that includes the redshift uncertainty.</p>
+      <dl class="facts">
+        <div><dt>Target redshift</dt><dd>4.4237 ± 0.0004</dd></div>
+        <div><dt>Validation match</dt><dd>M<sub>CI</sub> within 0.7%</dd></div>
+        <div><dt>Next step</dt><dd>PDR modelling</dd></div>
+      </dl>
+      <p>The next stage combines modified-blackbody SED fitting of the dust continuum with photodissociation-region models to constrain the gas density and the strength of the far-UV radiation field. A paper from this work is <span class="status">in preparation</span></p>
+      <h3 style="margin-top:2rem">Interests</h3>
+      <p>Looking ahead, I want to work on particle astrophysics and cosmology: the physics of the early universe and how it began.</p>
+      <ul class="tags">
+        <li>Cosmology</li><li>Particle astrophysics</li><li>Cosmic microwave background</li><li>High-redshift galaxies</li><li>Submillimetre astronomy</li><li>ISM physics</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="body">
+      <ul class="list">
+        <li><span class="t">[CI] line analysis pipeline</span><span class="w">Python · astropy</span>
+          <span class="d">Gaussian line fitting across four ALMA spectral windows, CMB-corrected L′ luminosities, excitation temperature and gas-mass derivation with Monte Carlo uncertainties.</span></li>
+        <li><span class="t"><a href="https://github.com/sethuastro/CMB_Decoupling_Project_">CMB Decoupling</a></span><span class="w">Python · CAMB</span>
+          <span class="d">Models hydrogen recombination with the Saha equation and the Peebles three-level atom, and computes the Thomson optical depth and the visibility function of last scattering. Validated against CAMB/RECFAST: z<sub>*</sub> = 1089.44 versus 1089.89.</span></li>
+        <li><span class="t">Dust SED fitting</span><span class="w">Python</span>
+          <span class="d">Modified-blackbody fits to far-infrared and millimetre photometry to estimate dust temperature and infrared luminosity.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="background">
+    <h2>Background</h2>
+    <div class="body">
+      <ul class="list">
+        <li><span class="t">MSc Astrophysics</span><span class="w">University of Hertfordshire</span>
+          <span class="d">Research project on molecular gas in the high-redshift starburst SGP 38326.</span></li>
+        <li><span class="t">Research internship</span><span class="w">ISRO</span>
+          <span class="d"><span class="todo">Add project title and a one-line summary.</span></span></li>
+        <li><span class="t">B.Tech Aeronautical Engineering</span><span class="w"><span class="todo">Institution</span></span>
+          <span class="d">Engineering foundation in fluid dynamics, propulsion and numerical methods.</span></li>
+        <li><span class="t">Teaching &amp; outreach</span><span class="w">Robotics · ages 6–15</span>
+          <span class="d">Weekly robotics teaching for ages 6–15, from C++ and Arduino/ESP32 through sensors to AI vision. I also train students to build drones and CubeSat-style nanosatellites.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <div class="body">
+      <ul class="contact">
+        <li><span class="k">Email</span><span class="todo">Add email address</span></li>
+        <li><span class="k">ORCID</span><a href="https://orcid.org/0009-0004-4767-2733">0009-0004-4767-2733</a></li>
+        <li><span class="k">GitHub</span><a href="https://github.com/sethuastro">github.com/sethuastro</a></li>
+        <li><span class="k">CV</span><span class="todo">Add cv.pdf</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer><span>© 2026 Sethulekshmi</span><span>[CI] ³P₁→³P₀ · 492.161 GHz rest</span></footer>
+</div>
+
+<script>
+(function(){
+  const svg=document.getElementById('spectrum'); if(!svg) return;
+  const NS='http://www.w3.org/2000/svg', W=360,H=170, L=10,R=350,T=14,B=140;
+  const f0=84,f1=156; const x=f=>L+(f-f0)/(f1-f0)*(R-L);
+  const lines=[{c:90.74,a:0.62,s:0.16,n:'[CI] 1–0'},{c:149.22,a:0.92,s:0.26,n:'[CI] 2–1'}];
+  let s=7; const rnd=()=>{s=(s*16807)%2147483647;return s/2147483647-0.5;};
+  const model=f=>lines.reduce((v,l)=>v+l.a*Math.exp(-((f-l.c)**2)/(2*l.s*l.s)),0.05);
+  const y=v=>B-v*(B-T);
+  let tr='',fit='';
+  for(let i=0;i<=480;i++){const f=f0+(f1-f0)*i/480;const m=model(f);
+    tr+=(i?'L':'M')+x(f).toFixed(1)+' '+y(m+rnd()*0.07).toFixed(1);
+    fit+=(i?'L':'M')+x(f).toFixed(1)+' '+y(m).toFixed(1);}
+  const el=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);svg.appendChild(e);return e;};
+  el('line',{x1:L,x2:R,y1:B,y2:B,class:'axis'});
+  [86,90,100,110,120,130,140,150].forEach(f=>{el('line',{x1:x(f),x2:x(f),y1:B,y2:B+4,class:'axis'});});
+  [90,110,130,150].forEach(f=>{const t=el('text',{x:x(f),y:B+16,'text-anchor':'middle'});t.textContent=f;});
+  const u=el('text',{x:R,y:B+28,'text-anchor':'end'});u.textContent='observed frequency (GHz)';
+  const b3=el('text',{x:x(90.74),y:B+28,'text-anchor':'middle'});b3.textContent='Band 3';
+  el('path',{d:tr,class:'trace',opacity:.35});
+  const p=el('path',{d:fit,class:'fit'});
+  lines.forEach(l=>{const t=el('text',{x:x(l.c)+(l.c>140?-6:6),y:y(model(l.c))-6,'text-anchor':l.c>140?'end':'start',class:'lbl'});t.textContent=l.n;});
+  try{const len=p.getTotalLength();if(matchMedia('(prefers-reduced-motion: no-preference)').matches){
+    p.style.setProperty('--len',len);p.style.strokeDashoffset=len;requestAnimationFrame(()=>requestAnimationFrame(()=>{p.style.strokeDashoffset=0;}));}}catch(e){}
+})();
+</script>
+
+</body>
+</html>
