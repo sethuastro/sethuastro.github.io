@@ -2,7 +2,7 @@
 
 Source for my academic homepage, **https://sethuastro.github.io**.
 
-I'm Sethulekshmi, an MSc Astrophysics student at the University of Hertfordshire. The site summarises my research on [CI] diagnostics of molecular gas in the z = 4.42 submillimetre galaxy SGP 38326, my computational projects, and my background.
+I'm Sethulekshmi Beena, an MSc Astrophysics student at the University of Hertfordshire. The site summarises my research on [CI] diagnostics of molecular gas in the z = 4.42 submillimetre galaxy SGP 38326, my computational projects, and my background.
 
 ## How it's built
 
