@@ -34,6 +34,7 @@
   --muted:#a7b0c8;          /* secondary text */
   --accent:#9db8ff;         /* starlight blue: links, badges, section markers */
   --accent-soft:rgba(157,184,255,0.12);
+  --badge-bg:#232c44;       /* opaque: the 12% accent tint pre-composited, so stars never show through badge text (7.1:1) */
   --bg:#0a1022;             /* glyph cut-outs in icons */
   --font:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -107,7 +108,7 @@ figcaption{font-size:.86rem;color:var(--muted);margin-top:.55rem;line-height:1.5
 .links{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;margin-top:.4rem}
 .links img{display:block;height:20px;width:auto}
 
-.badge{display:inline-block;font-size:.76rem;font-weight:500;background:var(--accent-soft);color:var(--accent);padding:.12rem .5rem;border-radius:4px;white-space:nowrap}
+.badge{display:inline-block;font-size:.76rem;font-weight:500;background:var(--badge-bg);color:var(--accent);padding:.12rem .5rem;border-radius:4px;white-space:nowrap}
 
 /* software */
 .sw{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
@@ -122,7 +123,7 @@ figcaption{font-size:.86rem;color:var(--muted);margin-top:.55rem;line-height:1.5
 .entries strong{font-weight:600}
 
 .tags{display:flex;flex-wrap:wrap;gap:.5rem;padding:0;margin:0;list-style:none}
-.tags li{font-size:.88rem;padding:.3rem .8rem;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:500}
+.tags li{font-size:.88rem;padding:.3rem .8rem;border-radius:99px;background:var(--badge-bg);color:var(--accent);font-weight:500}
 
 footer{padding:.9rem 1.2rem;font-size:.8rem;color:var(--muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem}
 
@@ -186,12 +187,11 @@ footer{padding:.9rem 1.2rem;font-size:.8rem;color:var(--muted);display:flex;flex
     <h2>Research</h2>
 
     <article class="card">
-      <h3>The gas in an early starburst</h3>
       <p class="lede">How much molecular gas fuels a galaxy forming stars at a ferocious rate, less than 1.5 billion years after the Big Bang?</p>
       <p>For my MSc project I analysed ALMA observations (programme 2017.1.00510.S) of the submillimetre galaxy SGP&nbsp;38326. Neutral atomic carbon is a clean tracer of molecular gas at high redshift, so I measured both [CI] transitions to derive the excitation temperature, carbon mass and total molecular gas mass.</p>
-      <p>I built the analysis pipeline in Python and validated it by reproducing the published results of Franco et al. for a comparison source before applying it to my own target. The pipeline handles CMB correction of line luminosities, iterative solution for the excitation temperature, and Monte Carlo error propagation that includes the redshift uncertainty. I then constrained the gas excitation with Bayesian inference (emcee MCMC over an interpolated grid of non-LTE RADEX models), compared the results with KOSMA-tau photodissociation-region models, and fitted the dust continuum with a modified blackbody.</p>
+      <p>I built the analysis pipeline in Python and validated it by reproducing the published results of Franco et al. for a comparison source before applying it to my own target. The pipeline handles CMB correction of line luminosities, iterative solution for the excitation temperature, and Monte Carlo error propagation through the full iterative calculation. I then constrained the gas excitation with Bayesian inference (emcee MCMC over an interpolated grid of non-LTE RADEX models), compared the results with KOSMA-tau photodissociation-region models, and fitted the dust continuum with a modified blackbody.</p>
       <dl class="facts">
-        <div><dt>SMG1 redshift ([CI])</dt><dd>4.4237 ± 0.0004</dd></div>
+        <div><dt>SMG1 redshift</dt><dd>4.4237 ± 0.0004</dd></div>
         <div><dt>Paper</dt><dd>in preparation</dd></div>
       </dl>
       <figure class="spec">
@@ -231,7 +231,7 @@ footer{padding:.9rem 1.2rem;font-size:.8rem;color:var(--muted);display:flex;flex
       <article class="card">
         <h3>[CI] line analysis pipeline</h3>
         <span><span class="badge">Python · Astropy</span></span>
-        <p>Gaussian line fitting across four ALMA spectral windows, CMB-corrected L′ luminosities, excitation temperature and gas-mass derivation with Monte Carlo uncertainties; dust SED fitting.</p>
+        <p>Gaussian line fitting across ALMA spectral windows in Bands 3, 4 and 6, CMB-corrected L′ luminosities, excitation temperature and gas-mass derivation with Monte Carlo uncertainties; dust SED fitting.</p>
       </article>
       <article class="card">
         <h3>LVG excitation modelling</h3>
@@ -287,7 +287,7 @@ footer{padding:.9rem 1.2rem;font-size:.8rem;color:var(--muted);display:flex;flex
   </section>
   </main>
 
-  <footer><span>© 2026 Sethulekshmi Beena</span><span>[CI] ³P₁→³P₀ · 492.161 GHz rest</span></footer>
+  <footer><span>© 2026 Sethulekshmi Beena</span></footer>
 </div>
 
 <script>
