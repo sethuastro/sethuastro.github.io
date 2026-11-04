@@ -3,231 +3,294 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Sethulekshmi Beena · Astrophysics</title>
-<meta name="description" content="Sethulekshmi Beena, MSc Astrophysics, University of Hertfordshire. [CI] diagnostics of molecular gas in the z = 4.42 submillimetre galaxy SGP 38326, and modelling of CMB decoupling. Seeking a funded PhD for September 2027.">
+<title>Sethulekshmi Beena — Astrophysics</title>
+<meta name="description" content="Sethulekshmi Beena, astrophysics researcher. MSc Astrophysics (Distinction), University of Hertfordshire. Cold molecular gas in the z = 4.425 starburst SGP 38326, and CMB-Decoupling, an open-source code for hydrogen recombination and the last-scattering surface.">
 <meta name="author" content="Sethulekshmi Beena">
 <link rel="canonical" href="https://sethuastro.github.io/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sethuastro.github.io/">
-<meta property="og:title" content="Sethulekshmi Beena · Astrophysics">
-<meta property="og:description" content="MSc Astrophysics, University of Hertfordshire. Cold gas in dusty starburst galaxies at z = 4.42, and the physics of CMB decoupling.">
-<meta property="og:site_name" content="Sethulekshmi Beena · Astrophysics">
+<meta property="og:title" content="Sethulekshmi Beena — Astrophysics">
+<meta property="og:description" content="Astrophysics researcher · MSc Astrophysics (Distinction), University of Hertfordshire">
+<meta property="og:image" content="https://sethuastro.github.io/images/headshot.jpg">
+<meta property="og:site_name" content="Sethulekshmi Beena — Astrophysics">
 <meta property="og:locale" content="en_GB">
 <meta name="twitter:card" content="summary">
 <meta name="color-scheme" content="light dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
 <style>
-/* Layout: single reading column with a left margin rail for section labels; hero carries a live-drawn [CI] spectrum at the target's redshift */
 *,*::before,*::after{box-sizing:border-box}
 :root{
   color-scheme:light;
-  --bg:#f3f4f7;
+  --bg:#ffffff;
   --surface:#ffffff;
-  --ink:#1b2340;
-  --muted:#5b6380;
-  --rule:#d9dce6;
-  --accent:#2b2f8f;      /* midnight blue */
-  --accent-soft:#e4e6f6;
-  --cool:#1769d6;        /* link blue */
-  --f-display:"Playfair Display", "Iowan Old Style", Georgia, serif;
-  --f-body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --f-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --soft:#f5f6fa;
+  --ink:#1a1f33;
+  --muted:#545b73;
+  --rule:#dfe2ea;
+  --accent:#1f2f6b;        /* deep navy: headings, links, badges */
+  --accent-soft:#e8ebf6;
+  --font:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0f1322; --surface:#161b2e; --ink:#e6e8f0; --muted:#9aa1bb; --rule:#2a3150;
-    --accent:#b3bdf5; --accent-soft:#22264a; --cool:#4da3ff; color-scheme:dark;
+    color-scheme:dark;
+    --bg:#0e1220; --surface:#151a2c; --soft:#151a2c; --ink:#e6e8f0; --muted:#a0a7bf; --rule:#2a3150;
+    --accent:#a9b8f2; --accent-soft:#232a4d;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0f1322; --surface:#161b2e; --ink:#e6e8f0; --muted:#9aa1bb; --rule:#2a3150;
-  --accent:#b3bdf5; --accent-soft:#22264a; --cool:#4da3ff; color-scheme:dark;
+  color-scheme:dark;
+  --bg:#0e1220; --surface:#151a2c; --soft:#151a2c; --ink:#e6e8f0; --muted:#a0a7bf; --rule:#2a3150;
+  --accent:#a9b8f2; --accent-soft:#232a4d;
 }
 
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1rem;line-height:1.65;
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:1rem}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:1rem;line-height:1.65;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
   padding-bottom:env(safe-area-inset-bottom, 0px)}
 img,svg{max-width:100%}
-.wrap{max-width:62rem;margin:0 auto;padding-block:3rem 4rem;}
-a{color:var(--cool);text-underline-offset:3px;text-decoration-thickness:1px}
-a:hover{color:var(--accent)}
-a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.wrap{max-width:52rem;margin:0 auto;padding-block:2rem 3rem}
+a{color:var(--accent);text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+p{margin:0 0 1rem}
 
 /* nav */
-nav{display:flex;flex-wrap:wrap;gap:.4rem 1.4rem;justify-content:space-between;align-items:baseline;
-  font-family:var(--f-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
-  border-bottom:1px solid var(--rule);padding-bottom:.9rem}
-nav .links{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}
+nav{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;font-size:.85rem;color:var(--muted);border-bottom:1px solid var(--rule);padding-bottom:.8rem}
 nav a{color:var(--muted);text-decoration:none}
-nav a:hover{color:var(--ink)}
+nav a:hover{color:var(--accent)}
 
-/* hero */
-.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:2.5rem;align-items:end;padding-block:3.5rem 3rem}
-.hero h1{font-family:var(--f-display);font-weight:400;font-size:clamp(2.5rem,6.2vw,4.1rem);line-height:1.05;letter-spacing:-.01em;margin:0 0 1rem;text-wrap:balance}
-.hero .role{font-size:1.12rem;color:var(--ink);max-width:34rem;margin:0 0 .9rem}
-.hero .role em{font-family:var(--f-display);font-size:1.08em;color:var(--accent)}
-.hero .meta{font-family:var(--f-mono);font-size:.8rem;color:var(--muted);margin:0}
-.spec{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:1rem 1rem .7rem;min-width:0}
-.spec-head{display:flex;justify-content:space-between;gap:1rem;font-family:var(--f-mono);font-size:.72rem;color:var(--muted);letter-spacing:.04em;margin-bottom:.4rem}
-.spec svg{display:block;width:100%;height:auto;overflow:visible}
-.spec .axis{stroke:var(--rule);stroke-width:1}
-.spec .trace{fill:none;stroke:var(--ink);stroke-width:1.3}
-.spec .fit{fill:none;stroke:var(--accent);stroke-width:2}
-.spec text{font-family:var(--f-mono);font-size:10px;fill:var(--muted)}
-.spec text.lbl{fill:var(--accent);font-size:10.5px}
-.spec figcaption{font-size:.78rem;color:var(--muted);margin-top:.5rem;line-height:1.5}
+/* header */
+.hero{display:flex;align-items:center;gap:2rem;padding-block:2.5rem 2.2rem}
+.headshot{flex:none;width:9.5rem;height:9.5rem;border-radius:50%;object-fit:cover;border:3px solid var(--accent-soft)}
+.hero h1{font-size:clamp(1.9rem,5vw,2.6rem);font-weight:600;line-height:1.15;letter-spacing:-.01em;margin:0 0 .4rem;color:var(--accent)}
+.hero .role{font-size:1.05rem;margin:0 0 .2rem}
+.hero .seeking{font-size:.92rem;color:var(--muted);margin:0 0 1rem}
+
+.icons{display:flex;flex-wrap:wrap;gap:.5rem;margin:0;padding:0;list-style:none}
+.icons a{display:inline-flex;align-items:center;gap:.4rem;font-size:.88rem;font-weight:500;text-decoration:none;
+  border:1px solid var(--rule);border-radius:99px;padding:.3rem .8rem;color:var(--accent);background:var(--surface)}
+.icons a:hover{border-color:var(--accent)}
+.icons svg{width:1.05rem;height:1.05rem;flex:none}
 
 /* sections */
-section{display:grid;grid-template-columns:11rem minmax(0,1fr);gap:1.5rem 2.5rem;padding-block:2.6rem;border-top:1px solid var(--rule)}
-section > h2{font-family:var(--f-mono);font-weight:500;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:.45rem 0 0}
-.body{min-width:0;max-width:40rem}
-.body p{margin:0 0 1rem}
-.body h3{font-family:var(--f-display);font-weight:400;font-size:1.55rem;line-height:1.2;margin:0 0 .6rem;text-wrap:balance}
-.lede{font-family:var(--f-display);font-size:1.4rem;line-height:1.4;margin:0 0 1.2rem;text-wrap:balance}
+section{padding-block:2.2rem;border-top:1px solid var(--rule)}
+h2{font-size:1.35rem;font-weight:600;color:var(--accent);margin:0 0 1.1rem;letter-spacing:-.005em}
+h3{font-size:1.12rem;font-weight:600;margin:0 0 .7rem;line-height:1.35}
+.lede{font-size:1.1rem;font-style:italic;color:var(--ink)}
 
-.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:6px;overflow:hidden;margin:1.4rem 0}
-.facts div{background:var(--surface);padding:.85rem 1rem}
-.facts dt{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.facts dd{margin:.2rem 0 0;font-family:var(--f-mono);font-size:1rem;font-variant-numeric:tabular-nums}
-.facts dd sub,.facts dd sup{font-size:.7em}
+.card{border:1px solid var(--rule);border-radius:10px;padding:1.4rem 1.5rem;background:var(--surface)}
+.card + .card{margin-top:1.4rem}
 
-.tags{display:flex;flex-wrap:wrap;gap:.45rem;padding:0;margin:0;list-style:none}
-.tags li{font-size:.82rem;padding:.25rem .65rem;border:1px solid var(--rule);border-radius:99px;color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin:1.3rem 0}
+.facts div{background:var(--soft);border:1px solid var(--rule);border-radius:8px;padding:.75rem 1rem}
+.facts dt{font-size:.78rem;color:var(--muted);letter-spacing:.02em}
+.facts dd{margin:.15rem 0 0;font-size:1.05rem;font-weight:500;font-variant-numeric:tabular-nums}
 
-.list{list-style:none;margin:0;padding:0;display:grid;gap:1.4rem}
-.list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.2rem 1rem}
-.list .t{font-weight:600}
-.list .w{font-family:var(--f-mono);font-size:.78rem;color:var(--muted);white-space:nowrap}
-.list .d{grid-column:1/-1;color:var(--muted);font-size:.95rem}
+figure{margin:1.3rem 0}
+figcaption{font-size:.86rem;color:var(--muted);margin-top:.55rem;line-height:1.5}
+.fig-img{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--rule);border-radius:6px;padding:.4rem}
 
-.status{display:inline-block;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent);padding:.15rem .5rem;border-radius:3px;margin-left:.4rem;vertical-align:2px}
+.spec{background:var(--soft);border:1px solid var(--rule);border-radius:8px;padding:1rem 1rem .7rem;max-width:30rem}
+.spec-head{display:flex;justify-content:space-between;gap:1rem;font-size:.78rem;color:var(--muted);margin-bottom:.4rem}
+.spec svg{display:block;width:100%;height:auto;overflow:visible}
+.spec .axis{stroke:var(--muted);stroke-width:1;opacity:.5}
+.spec .trace{fill:none;stroke:var(--ink);stroke-width:1.3}
+.spec .fit{fill:none;stroke:var(--accent);stroke-width:2}
+.spec text{font-family:var(--font);font-size:10px;fill:var(--muted)}
+.spec text.lbl{fill:var(--accent);font-size:10.5px;font-weight:500}
 
-.contact{display:grid;gap:.7rem;margin:0;padding:0;list-style:none}
-.contact li{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:1rem;align-items:baseline}
-.contact li > :last-child{min-width:0;overflow-wrap:anywhere}
-.contact .k{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.contact .email{font-family:var(--f-mono);font-size:.92rem;user-select:all;-webkit-user-select:all}
-.todo{color:var(--muted);font-style:italic}
+.links{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;margin-top:.4rem}
+.links img{display:block;height:20px;width:auto}
 
-footer{border-top:1px solid var(--rule);padding-top:1.2rem;font-family:var(--f-mono);font-size:.74rem;color:var(--muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem}
+.badge{display:inline-block;font-size:.76rem;font-weight:500;background:var(--accent-soft);color:var(--accent);padding:.12rem .5rem;border-radius:4px;white-space:nowrap}
 
-@media (max-width:760px){
-  .hero{grid-template-columns:minmax(0,1fr);padding-block:2.2rem 2rem;gap:1.8rem}
-  section{grid-template-columns:minmax(0,1fr);gap:.8rem}
+/* software */
+.sw{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.sw .card{padding:1.1rem 1.2rem;margin:0;display:flex;flex-direction:column;gap:.5rem}
+.sw h3{margin:0;font-size:1.02rem}
+.sw p{margin:0;font-size:.92rem;color:var(--muted)}
+.sw .card-links{font-size:.88rem;display:flex;flex-direction:column;gap:.15rem;margin-top:auto;padding-top:.3rem;overflow-wrap:anywhere}
+
+/* lists */
+.entries{list-style:none;margin:0;padding:0;display:grid;gap:1.1rem}
+.entries li{padding-left:1rem;border-left:3px solid var(--accent-soft)}
+.entries strong{font-weight:600}
+
+.tags{display:flex;flex-wrap:wrap;gap:.5rem;padding:0;margin:0;list-style:none}
+.tags li{font-size:.88rem;padding:.3rem .8rem;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:500}
+
+footer{border-top:1px solid var(--rule);padding-top:1.2rem;font-size:.8rem;color:var(--muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem}
+
+@media (max-width:640px){
+  .wrap{padding-block:1.2rem 2rem}
+  .hero{flex-direction:column;align-items:flex-start;gap:1.2rem;padding-block:1.8rem 1.6rem}
+  .headshot{width:7.5rem;height:7.5rem}
+  .card{padding:1.1rem 1rem}
   .facts{grid-template-columns:minmax(0,1fr)}
-  .list li{grid-template-columns:minmax(0,1fr)}
-  .list .w{white-space:normal}
+  .sw{grid-template-columns:minmax(0,1fr)}
 }
-@media (prefers-reduced-motion: no-preference){
-  .spec .fit{stroke-dasharray:var(--len,0);stroke-dashoffset:0;transition:stroke-dashoffset 1.6s ease-out}
+@media (min-width:641px) and (max-width:860px){
+  .sw{grid-template-columns:minmax(0,1fr)}
 }
 </style>
 </head>
 <body>
 
 <div class="wrap">
-  <nav>
-    <span>Sethulekshmi Beena</span>
-    <div class="links">
-      <a href="#research">Research</a>
-      <a href="#projects">Projects</a>
-      <a href="#background">Background</a>
-      <a href="#contact">Contact</a>
-    </div>
+  <nav aria-label="Sections">
+    <a href="#about">About</a>
+    <a href="#research">Research</a>
+    <a href="#software">Software</a>
+    <a href="#publications">Publications</a>
+    <a href="#background">Background</a>
+    <a href="#teaching">Teaching</a>
+    <a href="#contact">Contact</a>
   </nav>
 
   <header class="hero">
+    <img class="headshot" src="images/headshot.jpg" width="800" height="800" alt="Sethulekshmi Beena">
     <div>
       <h1>Sethulekshmi Beena</h1>
-      <p class="role">MSc Astrophysics, University of Hertfordshire. I study the cold gas in <em>dusty starburst galaxies</em> seen when the universe was about 1.4 billion years old.</p>
-      <p class="meta">Seeking a funded PhD · September 2027 entry</p>
+      <p class="role">Astrophysics researcher · MSc Astrophysics (Distinction), University of Hertfordshire</p>
+      <p class="seeking">Seeking a funded PhD · September 2027 entry</p>
+      <ul class="icons" aria-label="Links">
+        <!-- CV: add cv.pdf, then uncomment this item (and the CV item in Contact).
+        <li><a href="cv.pdf"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 2.5h8l4 4v15H6z"/><path d="M14 2.5v4h4M9 12h6M9 15.5h6M9 19h4"/></svg>CV</a></li>
+        -->
+        <li><a href="https://github.com/sethuastro"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>GitHub</a></li>
+        <li><a href="https://orcid.org/0009-0004-4767-2733"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><g fill="var(--bg)"><circle cx="7.6" cy="6.9" r="1.2"/><rect x="6.7" y="9" width="1.8" height="8.6"/><path d="M10.6 9h3.2c3 0 4.6 2 4.6 4.3s-1.6 4.3-4.6 4.3h-3.2zm1.8 1.6v5.4h1.3c2 0 2.9-1.2 2.9-2.7s-.9-2.7-2.9-2.7z"/></g></svg>ORCID</a></li>
+        <li><a href="https://www.linkedin.com/in/sethulekshmi-beena"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="4" fill="currentColor"/><g fill="var(--bg)"><circle cx="7" cy="7.2" r="1.7"/><rect x="5.5" y="10" width="3" height="8.5"/><path d="M10.6 10h2.9v1.3c.5-.9 1.6-1.5 3-1.5 2.4 0 3.3 1.5 3.3 4v4.7h-3v-4.2c0-1.1-.3-2-1.5-2s-1.7.9-1.7 2v4.2h-3z"/></g></svg>LinkedIn</a></li>
+        <li><a href="mailto:sethulekshmib71@gmail.com"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="m3 6 9 7 9-7"/></svg>Email</a></li>
+      </ul>
     </div>
-
-    <figure class="spec" style="margin:0">
-      <div class="spec-head"><span>SGP 38326 · SMG1</span><span>z = 4.4237</span></div>
-      <svg id="spectrum" viewBox="0 0 360 170" role="img" aria-label="Schematic spectrum showing the [CI] 1–0 and 2–1 carbon lines redshifted into ALMA Bands 3 and 4"></svg>
-      <figcaption>Neutral carbon lines emitted at 492 and 809&nbsp;GHz arrive at ALMA redshifted to about 90.7 and 149.2&nbsp;GHz. Schematic profile.</figcaption>
-    </figure>
   </header>
+
+  <main>
+  <section id="about">
+    <h2>About</h2>
+    <p>I'm Sethulekshmi Beena, an astrophysics researcher interested in how the Universe grew from its simplest beginnings into the structure we see today. I hold an MSc in Astrophysics with Distinction from the University of Hertfordshire.</p>
+    <p>The galaxies around us began as tiny ripples in the early Universe, still visible today in the cosmic microwave background. I want to understand that whole story: from the first moments, where quantum gravity and particle physics take over, through recombination and the release of the CMB, to the formation of galaxies. Along the way, I'm interested in where our standard models of cosmology and particle physics still fall short, and how we can test them.</p>
+    <p>My research so far spans both ends of this story. For my MSc, supervised by Prof. Kristen Coppin, I studied the cold molecular gas in SGP&nbsp;38326, a dusty starburst galaxy seen when the Universe was about 1.4 billion years old, using multi-line ALMA observations and Bayesian radiative-transfer modelling. A paper from this work is in preparation. Alongside this, I wrote CMB-Decoupling, an open-source Python code that models hydrogen recombination and the last-scattering surface, and validated it against CAMB/RECFAST.</p>
+    <p>I'm now looking for a PhD in cosmology, where I can bring together CMB physics and statistical inference.</p>
+  </section>
 
   <section id="research">
     <h2>Research</h2>
-    <div class="body">
+
+    <article class="card">
+      <h3>The gas in an early starburst</h3>
       <p class="lede">How much molecular gas fuels a galaxy forming stars at a ferocious rate, less than 1.5 billion years after the Big Bang?</p>
-      <h3>[CI] diagnostics of SGP&nbsp;38326</h3>
-      <p>My MSc project analyses ALMA observations (programme 2017.1.00510.S) of the submillimetre galaxy SGP&nbsp;38326. Neutral atomic carbon is a clean tracer of molecular gas at high redshift, so I measure both [CI] transitions to derive the excitation temperature, carbon mass and total molecular gas mass.</p>
-      <p>I built the analysis pipeline in Python and validated it by reproducing the published results of Franco et al. for a comparison source before applying it to my own target. The pipeline handles CMB correction of line luminosities, iterative solution for the excitation temperature, and Monte Carlo error propagation that includes the redshift uncertainty.</p>
+      <p>For my MSc project I analysed ALMA observations (programme 2017.1.00510.S) of the submillimetre galaxy SGP&nbsp;38326. Neutral atomic carbon is a clean tracer of molecular gas at high redshift, so I measured both [CI] transitions to derive the excitation temperature, carbon mass and total molecular gas mass.</p>
+      <p>I built the analysis pipeline in Python and validated it by reproducing the published results of Franco et al. for a comparison source before applying it to my own target. The pipeline handles CMB correction of line luminosities, iterative solution for the excitation temperature, and Monte Carlo error propagation that includes the redshift uncertainty. I then constrained the gas excitation with Bayesian inference (emcee MCMC over an interpolated grid of non-LTE RADEX models), compared the results with KOSMA-tau photodissociation-region models, and fitted the dust continuum with a modified blackbody.</p>
       <dl class="facts">
-        <div><dt>Target redshift</dt><dd>4.4237 ± 0.0004</dd></div>
-        <div><dt>Validation match</dt><dd>M<sub>CI</sub> within 0.7%</dd></div>
-        <div><dt>Next step</dt><dd>PDR modelling</dd></div>
+        <div><dt>SMG1 redshift ([CI])</dt><dd>4.4237 ± 0.0004</dd></div>
+        <div><dt>Paper</dt><dd>in preparation</dd></div>
       </dl>
-      <p>The next stage combines modified-blackbody SED fitting of the dust continuum with photodissociation-region models to constrain the gas density and the strength of the far-UV radiation field. A paper from this work is <span class="status">in preparation</span></p>
-      <h3 style="margin-top:2rem">Interests</h3>
-      <p>Looking ahead, I want to work on particle astrophysics and cosmology: the physics of the early universe and how it began.</p>
-      <ul class="tags">
-        <li>Cosmology</li><li>Particle astrophysics</li><li>Cosmic microwave background</li><li>High-redshift galaxies</li><li>Submillimetre astronomy</li><li>ISM physics</li>
-      </ul>
+      <figure class="spec">
+        <div class="spec-head"><span>SGP 38326 · SMG1</span><span>z = 4.4237</span></div>
+        <svg id="spectrum" viewBox="0 0 360 170" role="img" aria-label="Schematic spectrum showing the [CI] 1–0 and 2–1 carbon lines redshifted into ALMA Bands 3 and 4"></svg>
+        <figcaption>Neutral carbon lines emitted at 492 and 809&nbsp;GHz arrive at ALMA redshifted to about 90.7 and 149.2&nbsp;GHz. Schematic profile.</figcaption>
+      </figure>
+    </article>
+
+    <article class="card">
+      <h3>The last-scattering surface</h3>
+      <p>When was the cosmic microwave background actually released, and how thick is the "surface" it comes from? CMB-Decoupling models hydrogen recombination with the Saha equation (including helium) and the Peebles three-level atom, then computes the Thomson optical depth and the visibility function of last scattering. Validated against CAMB/RECFAST: last scattering at <i>z</i><sub>*</sub> = 1089.44, compared with CAMB's 1089.89.</p>
+      <figure>
+        <img class="fig-img" src="images/visibility_function.png" width="2668" height="1049" loading="lazy"
+          alt="Two panels. Left: the visibility function g(z) against redshift from 700 to 1600; the Peebles model and CAMB/RECFAST overlap and peak near z = 1080, while Saha equilibrium peaks near z = 1280. Right: Thomson optical depth tau(z) on a log scale from z = 0 to 2000, crossing tau = 1 near z = 1090 for Peebles and CAMB and near z = 1290 for Saha.">
+        <figcaption>Visibility function (left) and optical depth (right). The Peebles model tracks CAMB/RECFAST closely; Saha equilibrium puts last scattering about 200 in redshift too early.</figcaption>
+      </figure>
+      <div class="links">
+        <a href="https://github.com/sethuastro/CMB_Decoupling">GitHub repository</a>
+        <a href="https://doi.org/10.5281/zenodo.23932529"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.23932529.svg" alt="DOI 10.5281/zenodo.23932529" width="186" height="20"></a>
+      </div>
+    </article>
+  </section>
+
+  <section id="software">
+    <h2>Software</h2>
+    <div class="sw">
+      <article class="card">
+        <h3>CMB-Decoupling</h3>
+        <span><span class="badge">Python · CAMB</span></span>
+        <p>Recombination and the last-scattering surface, validated against CAMB/RECFAST; tests and CI.</p>
+        <div class="card-links">
+          <a href="https://github.com/sethuastro/CMB_Decoupling">github.com/sethuastro/CMB_Decoupling</a>
+          <a href="https://doi.org/10.5281/zenodo.23932529">doi:10.5281/zenodo.23932529</a>
+        </div>
+      </article>
+      <article class="card">
+        <h3>[CI] line analysis pipeline</h3>
+        <span><span class="badge">Python · Astropy</span></span>
+        <p>Gaussian line fitting across four ALMA spectral windows, CMB-corrected L′ luminosities, excitation temperature and gas-mass derivation with Monte Carlo uncertainties; dust SED fitting.</p>
+      </article>
+      <article class="card">
+        <h3>LVG excitation modelling</h3>
+        <span><span class="badge">Python · emcee · RADEX</span></span>
+        <p>Bayesian MCMC over an interpolated grid of 847 non-LTE RADEX models, cross-checked with a chi-squared grid search.</p>
+      </article>
     </div>
   </section>
 
-  <section id="projects">
-    <h2>Projects</h2>
-    <div class="body">
-      <ul class="list">
-        <li><span class="t">[CI] line analysis pipeline</span><span class="w">Python · astropy</span>
-          <span class="d">Gaussian line fitting across four ALMA spectral windows, CMB-corrected L′ luminosities, excitation temperature and gas-mass derivation with Monte Carlo uncertainties.</span></li>
-        <li><span class="t"><a href="https://github.com/sethuastro/CMB_Decoupling">CMB Decoupling</a></span><span class="w">Python · CAMB</span>
-          <span class="d">Models hydrogen recombination with the Saha equation and the Peebles three-level atom, and computes the Thomson optical depth and the visibility function of last scattering. Validated against CAMB/RECFAST: z<sub>*</sub> = 1089.44 versus 1089.89.</span></li>
-        <li><span class="t">Dust SED fitting</span><span class="w">Python</span>
-          <span class="d">Modified-blackbody fits to far-infrared and millimetre photometry to estimate dust temperature and infrared luminosity.</span></li>
-      </ul>
-    </div>
+  <section id="publications">
+    <h2>Publications</h2>
+    <ul class="entries">
+      <li><strong>Beena, S.</strong>, Coppin, K. E. K., et al., <i>The interstellar medium of the hyperluminous starburst SGP&nbsp;38326</i>, in preparation.</li>
+      <li>Software: <strong>Beena, S.</strong> (2026), <i>CMB Decoupling: hydrogen recombination and photon last scattering</i>, v1.0.0, Zenodo, <a href="https://doi.org/10.5281/zenodo.23932529">doi:10.5281/zenodo.23932529</a></li>
+    </ul>
   </section>
 
   <section id="background">
     <h2>Background</h2>
-    <div class="body">
-      <ul class="list">
-        <li><span class="t">MSc Astrophysics</span><span class="w">University of Hertfordshire</span>
-          <span class="d">Research project on molecular gas in the high-redshift starburst SGP 38326.</span></li>
-        <li><span class="t">Research internship</span><span class="w">ISRO (LPSC)</span>
-          <span class="d"><em>The effect of turbulence modelling on freestream–plume interactions for the Saturn&nbsp;V launch vehicle.</em> A group CFD study in ANSYS Fluent of plume-induced flow separation, comparing the Spalart–Allmaras, k–ω and k–ε turbulence models at 1–10% turbulent intensity, with and without compressibility.</span></li>
-        <li><span class="t">B.Tech Aeronautical Engineering</span><span class="w">2024</span>
-          <span class="d">Rajadhani Institute of Engineering and Technology (APJ Abdul Kalam Technological University). Engineering foundation in fluid dynamics, propulsion and numerical methods.</span></li>
-      </ul>
-      <h3 style="margin-top:2.2rem">Teaching &amp; outreach</h3>
-      <ul class="list">
-        <li><span class="t">STEM tutor</span><span class="w">Robotics.ai</span>
-          <span class="d">Amersham, UK · Sep 2026 – present. Weekly robotics teaching for ages 6–15, from C++ and Arduino/ESP32 through sensors to AI vision.</span></li>
-        <li><span class="t">Drone and nanosatellite trainer</span><span class="w">Jet Aerospace</span>
-          <span class="d">Global Drone Hub, Palakkad, India · Jul–Nov 2024. Trained students to build drones and CubeSat-style nanosatellites, and built embedded projects (a GNSS tracker and a weather station) on Arduino and ESP32 in C++.</span></li>
-      </ul>
-    </div>
+    <ul class="entries">
+      <li><strong>MSc Astrophysics (Distinction), University of Hertfordshire, 2025–2026.</strong> Research project on molecular gas in the high-redshift starburst SGP&nbsp;38326.</li>
+      <li><strong>BTech final-year research project (team of three), ISRO Liquid Propulsion Systems Centre, Feb–Mar 2024.</strong> The effect of turbulence modelling on freestream-plume interactions for the Saturn&nbsp;V launch vehicle: a CFD study in ANSYS Fluent of plume-induced flow separation, comparing three turbulence models, and varying turbulence intensity and compressibility for the two-equation models.</li>
+      <li><strong>BTech Aeronautical Engineering, 2020–2024, Rajadhani Institute of Engineering and Technology (APJ Abdul Kalam Technological University).</strong> Foundation in fluid dynamics, propulsion and numerical methods.</li>
+    </ul>
+  </section>
+
+  <section id="teaching">
+    <h2>Teaching &amp; outreach</h2>
+    <ul class="entries">
+      <li><strong>STEM tutor, Mindspire Labs (Robotics.ai), Amersham, UK, Sep 2026–present.</strong> Weekly robotics and applied-AI sessions for ages 6–15: C++ and Python on Arduino, ESP32 and Raspberry Pi, from sensors to AI vision.</li>
+      <li><strong>Drone and nanosatellite trainer, Global Drone Hub (Jet Aerospace), Palakkad, India, Jul–Nov 2024.</strong> Trained students to build drones and CubeSat-style nanosatellites.</li>
+    </ul>
+  </section>
+
+  <section id="interests">
+    <h2>Interests</h2>
+    <ul class="tags">
+      <li>Cosmology</li><li>Particle astrophysics</li><li>Cosmic microwave background</li><li>Bayesian inference</li><li>High-redshift galaxies</li><li>Submillimetre astronomy</li><li>ISM physics</li>
+    </ul>
   </section>
 
   <section id="contact">
     <h2>Contact</h2>
-    <div class="body">
-      <ul class="contact">
-        <li><span class="k">Email</span><span class="email">sethulekshmib71@gmail.com</span></li>
-        <li><span class="k">ORCID</span><a href="https://orcid.org/0009-0004-4767-2733">0009-0004-4767-2733</a></li>
-        <li><span class="k">GitHub</span><a href="https://github.com/sethuastro">github.com/sethuastro</a></li>
-        <li><span class="k">CV</span><span class="todo">cv.pdf</span></li>
-      </ul>
-    </div>
+    <ul class="icons" aria-label="Contact links">
+      <li><a href="mailto:sethulekshmib71@gmail.com"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="m3 6 9 7 9-7"/></svg>sethulekshmib71@gmail.com</a></li>
+      <li><a href="https://github.com/sethuastro"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 0-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>GitHub</a></li>
+      <li><a href="https://orcid.org/0009-0004-4767-2733"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="currentColor"/><g fill="var(--bg)"><circle cx="7.6" cy="6.9" r="1.2"/><rect x="6.7" y="9" width="1.8" height="8.6"/><path d="M10.6 9h3.2c3 0 4.6 2 4.6 4.3s-1.6 4.3-4.6 4.3h-3.2zm1.8 1.6v5.4h1.3c2 0 2.9-1.2 2.9-2.7s-.9-2.7-2.9-2.7z"/></g></svg>ORCID</a></li>
+      <li><a href="https://www.linkedin.com/in/sethulekshmi-beena"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="22" height="22" rx="4" fill="currentColor"/><g fill="var(--bg)"><circle cx="7" cy="7.2" r="1.7"/><rect x="5.5" y="10" width="3" height="8.5"/><path d="M10.6 10h2.9v1.3c.5-.9 1.6-1.5 3-1.5 2.4 0 3.3 1.5 3.3 4v4.7h-3v-4.2c0-1.1-.3-2-1.5-2s-1.7.9-1.7 2v4.2h-3z"/></g></svg>LinkedIn</a></li>
+      <!-- CV: uncomment when cv.pdf is added.
+      <li><a href="cv.pdf"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 2.5h8l4 4v15H6z"/><path d="M14 2.5v4h4M9 12h6M9 15.5h6M9 19h4"/></svg>CV</a></li>
+      -->
+    </ul>
   </section>
+  </main>
 
   <footer><span>© 2026 Sethulekshmi Beena</span><span>[CI] ³P₁→³P₀ · 492.161 GHz rest</span></footer>
 </div>
 
 <script>
+/* Schematic [CI] spectrum (not data): two Gaussian lines at the observed frequencies, drawn statically. */
 (function(){
   const svg=document.getElementById('spectrum'); if(!svg) return;
-  const NS='http://www.w3.org/2000/svg', W=360,H=170, L=10,R=350,T=14,B=140;
+  const NS='http://www.w3.org/2000/svg', L=10,R=350,T=14,B=140;
   const f0=84,f1=156; const x=f=>L+(f-f0)/(f1-f0)*(R-L);
   const lines=[{c:90.74,a:0.62,s:0.16,n:'[CI] 1–0'},{c:149.22,a:0.92,s:0.26,n:'[CI] 2–1'}];
   let s=7; const rnd=()=>{s=(s*16807)%2147483647;return s/2147483647-0.5;};
@@ -244,10 +307,8 @@ footer{border-top:1px solid var(--rule);padding-top:1.2rem;font-family:var(--f-m
   const u=el('text',{x:R,y:B+28,'text-anchor':'end'});u.textContent='observed frequency (GHz)';
   const b3=el('text',{x:x(90.74),y:B+28,'text-anchor':'middle'});b3.textContent='Band 3';
   el('path',{d:tr,class:'trace',opacity:.35});
-  const p=el('path',{d:fit,class:'fit'});
+  el('path',{d:fit,class:'fit'});
   lines.forEach(l=>{const t=el('text',{x:x(l.c)+(l.c>140?-6:6),y:y(model(l.c))-6,'text-anchor':l.c>140?'end':'start',class:'lbl'});t.textContent=l.n;});
-  try{const len=p.getTotalLength();if(matchMedia('(prefers-reduced-motion: no-preference)').matches){
-    p.style.setProperty('--len',len);p.style.strokeDashoffset=len;requestAnimationFrame(()=>requestAnimationFrame(()=>{p.style.strokeDashoffset=0;}));}}catch(e){}
 })();
 </script>
 
