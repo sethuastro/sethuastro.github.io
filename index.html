@@ -16,90 +16,91 @@
 <meta property="og:site_name" content="Sethulekshmi Beena — Astrophysics">
 <meta property="og:locale" content="en_GB">
 <meta name="twitter:card" content="summary">
-<meta name="color-scheme" content="light dark">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#05070f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
 <style>
 *,*::before,*::after{box-sizing:border-box}
 :root{
-  color-scheme:light;
-  --bg:#ffffff;
-  --surface:#ffffff;
-  --soft:#f5f6fa;
-  --ink:#1a1f33;
-  --muted:#545b73;
-  --rule:#dfe2ea;
-  --accent:#1f2f6b;        /* deep navy: headings, links, badges */
-  --accent-soft:#e8ebf6;
+  color-scheme:dark;
+  --sky-top:#05070f;
+  --sky-bottom:#0b1226;
+  --panel:rgba(10,16,34,0.82);
+  --panel-line:rgba(255,255,255,0.08);
+  --inset:rgba(255,255,255,0.035);
+  --ink:#e8ebf4;            /* body text */
+  --muted:#a7b0c8;          /* secondary text */
+  --accent:#9db8ff;         /* starlight blue: links, badges, section markers */
+  --accent-soft:rgba(157,184,255,0.12);
+  --bg:#0a1022;             /* glyph cut-outs in icons */
   --font:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    color-scheme:dark;
-    --bg:#0e1220; --surface:#151a2c; --soft:#151a2c; --ink:#e6e8f0; --muted:#a0a7bf; --rule:#2a3150;
-    --accent:#a9b8f2; --accent-soft:#232a4d;
-  }
-}
-:root[data-theme="dark"]{
-  color-scheme:dark;
-  --bg:#0e1220; --surface:#151a2c; --soft:#151a2c; --ink:#e6e8f0; --muted:#a0a7bf; --rule:#2a3150;
-  --accent:#a9b8f2; --accent-soft:#232a4d;
-}
 
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:1rem}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:1rem;line-height:1.65;
+/* the sky gradient sits on the root, so the fixed star canvas (z-index -1) paints above it */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:1rem;min-height:100%;
+  background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-bottom) 100%) fixed var(--sky-top)}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--font);font-size:1rem;line-height:1.65;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
   padding-bottom:env(safe-area-inset-bottom, 0px)}
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;display:block}
 img,svg{max-width:100%}
-.wrap{max-width:52rem;margin:0 auto;padding-block:2rem 3rem}
+.wrap{position:relative;max-width:52rem;margin:0 auto;padding-block:1.5rem 2.5rem;display:flex;flex-direction:column;gap:1.1rem}
+main{display:flex;flex-direction:column;gap:1.1rem}
 a{color:var(--accent);text-underline-offset:3px;text-decoration-thickness:1px}
 a:hover{text-decoration-thickness:2px}
 a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
 p{margin:0 0 1rem}
 
+/* translucent panels: text never sits directly on the stars */
+nav,.hero,section,footer{background:var(--panel);border:1px solid var(--panel-line);border-radius:14px;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+
 /* nav */
-nav{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;font-size:.85rem;color:var(--muted);border-bottom:1px solid var(--rule);padding-bottom:.8rem}
+nav{display:flex;flex-wrap:wrap;gap:.3rem 1.2rem;font-size:.85rem;padding:.7rem 1.2rem}
 nav a{color:var(--muted);text-decoration:none}
 nav a:hover{color:var(--accent)}
 
 /* header */
-.hero{display:flex;align-items:center;gap:2rem;padding-block:2.5rem 2.2rem}
-.headshot{flex:none;width:9.5rem;height:9.5rem;border-radius:50%;object-fit:cover;border:3px solid var(--accent-soft)}
-.hero h1{font-size:clamp(1.9rem,5vw,2.6rem);font-weight:600;line-height:1.15;letter-spacing:-.01em;margin:0 0 .4rem;color:var(--accent)}
+.hero{display:flex;align-items:center;gap:2rem;padding:2rem}
+.headshot{flex:none;width:9.5rem;height:9.5rem;border-radius:50%;object-fit:cover;
+  outline:1.5px solid rgba(157,184,255,0.55);outline-offset:4px}
+.hero h1{font-size:clamp(1.9rem,5vw,2.6rem);font-weight:600;line-height:1.15;letter-spacing:.01em;margin:0 0 .4rem;color:var(--ink)}
 .hero .role{font-size:1.05rem;margin:0 0 .2rem}
 .hero .seeking{font-size:.92rem;color:var(--muted);margin:0 0 1rem}
 
 .icons{display:flex;flex-wrap:wrap;gap:.5rem;margin:0;padding:0;list-style:none}
 .icons a{display:inline-flex;align-items:center;gap:.4rem;font-size:.88rem;font-weight:500;text-decoration:none;
-  border:1px solid var(--rule);border-radius:99px;padding:.3rem .8rem;color:var(--accent);background:var(--surface)}
-.icons a:hover{border-color:var(--accent)}
+  border:1px solid var(--panel-line);border-radius:99px;padding:.3rem .8rem;color:var(--accent);background:var(--inset)}
+.icons a:hover{border-color:rgba(157,184,255,0.45)}
 .icons svg{width:1.05rem;height:1.05rem;flex:none}
 
 /* sections */
-section{padding-block:2.2rem;border-top:1px solid var(--rule)}
-h2{font-size:1.35rem;font-weight:600;color:var(--accent);margin:0 0 1.1rem;letter-spacing:-.005em}
-h3{font-size:1.12rem;font-weight:600;margin:0 0 .7rem;line-height:1.35}
+section{padding:1.8rem 2rem}
+h2{font-size:1.3rem;font-weight:600;color:var(--ink);margin:0 0 1.1rem;letter-spacing:.02em;display:flex;align-items:center;gap:.65rem}
+h2::before{content:"";width:.9rem;height:2px;background:var(--accent);border-radius:1px;flex:none}
+h3{font-size:1.12rem;font-weight:600;margin:0 0 .7rem;line-height:1.35;letter-spacing:.01em}
 .lede{font-size:1.1rem;font-style:italic;color:var(--ink)}
 
-.card{border:1px solid var(--rule);border-radius:10px;padding:1.4rem 1.5rem;background:var(--surface)}
+.card{border:1px solid var(--panel-line);border-radius:10px;padding:1.4rem 1.5rem;background:var(--inset)}
 .card + .card{margin-top:1.4rem}
 
 .facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin:1.3rem 0}
-.facts div{background:var(--soft);border:1px solid var(--rule);border-radius:8px;padding:.75rem 1rem}
+.facts div{background:var(--inset);border:1px solid var(--panel-line);border-radius:8px;padding:.75rem 1rem}
 .facts dt{font-size:.78rem;color:var(--muted);letter-spacing:.02em}
 .facts dd{margin:.15rem 0 0;font-size:1.05rem;font-weight:500;font-variant-numeric:tabular-nums}
 
 figure{margin:1.3rem 0}
 figcaption{font-size:.86rem;color:var(--muted);margin-top:.55rem;line-height:1.5}
-.fig-img{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--rule);border-radius:6px;padding:.4rem}
+.fig-img{display:block;width:100%;height:auto;background:#ffffff;border-radius:10px;padding:.6rem}
 
-.spec{background:var(--soft);border:1px solid var(--rule);border-radius:8px;padding:1rem 1rem .7rem;max-width:30rem}
+.spec{background:var(--inset);border:1px solid var(--panel-line);border-radius:8px;padding:1rem 1rem .7rem;max-width:30rem}
 .spec-head{display:flex;justify-content:space-between;gap:1rem;font-size:.78rem;color:var(--muted);margin-bottom:.4rem}
 .spec svg{display:block;width:100%;height:auto;overflow:visible}
-.spec .axis{stroke:var(--muted);stroke-width:1;opacity:.5}
-.spec .trace{fill:none;stroke:var(--ink);stroke-width:1.3}
-.spec .fit{fill:none;stroke:var(--accent);stroke-width:2}
+.spec .axis{stroke:var(--muted);stroke-width:1;opacity:.45}
+.spec .trace{fill:none;stroke:var(--ink);stroke-width:1.2}
+.spec .fit{fill:none;stroke:var(--accent);stroke-width:1.8}
 .spec text{font-family:var(--font);font-size:10px;fill:var(--muted)}
 .spec text.lbl{fill:var(--accent);font-size:10.5px;font-weight:500}
 
@@ -117,18 +118,20 @@ figcaption{font-size:.86rem;color:var(--muted);margin-top:.55rem;line-height:1.5
 
 /* lists */
 .entries{list-style:none;margin:0;padding:0;display:grid;gap:1.1rem}
-.entries li{padding-left:1rem;border-left:3px solid var(--accent-soft)}
+.entries li{padding-left:1rem;border-left:2px solid rgba(157,184,255,0.3)}
 .entries strong{font-weight:600}
 
 .tags{display:flex;flex-wrap:wrap;gap:.5rem;padding:0;margin:0;list-style:none}
 .tags li{font-size:.88rem;padding:.3rem .8rem;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:500}
 
-footer{border-top:1px solid var(--rule);padding-top:1.2rem;font-size:.8rem;color:var(--muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem}
+footer{padding:.9rem 1.2rem;font-size:.8rem;color:var(--muted);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem}
 
 @media (max-width:640px){
-  .wrap{padding-block:1.2rem 2rem}
-  .hero{flex-direction:column;align-items:flex-start;gap:1.2rem;padding-block:1.8rem 1.6rem}
+  .wrap{padding-block:1rem 1.6rem;gap:.8rem}
+  main{gap:.8rem}
+  .hero{flex-direction:column;align-items:flex-start;gap:1.2rem;padding:1.4rem 1.1rem}
   .headshot{width:7.5rem;height:7.5rem}
+  section{padding:1.4rem 1.1rem}
   .card{padding:1.1rem 1rem}
   .facts{grid-template-columns:minmax(0,1fr)}
   .sw{grid-template-columns:minmax(0,1fr)}
@@ -139,6 +142,7 @@ footer{border-top:1px solid var(--rule);padding-top:1.2rem;font-size:.8rem;color
 </style>
 </head>
 <body>
+<canvas id="sky" aria-hidden="true"></canvas>
 
 <div class="wrap">
   <nav aria-label="Sections">
@@ -286,6 +290,62 @@ footer{border-top:1px solid var(--rule);padding-top:1.2rem;font-size:.8rem;color
   <footer><span>© 2026 Sethulekshmi Beena</span><span>[CI] ³P₁→³P₀ · 492.161 GHz rest</span></footer>
 </div>
 
+<script>
+/* Night-sky background: one canvas, drawn once per viewport width with a fixed seed (same sky on every visit).
+   Magnitudes follow a power-law number count, dN/dm proportional to 10^(0.35 m), so faint stars dominate.
+   Colours come from blackbody temperatures, desaturated towards white as the eye sees them at night. */
+(function(){
+  const cv=document.getElementById('sky'); if(!cv||!cv.getContext) return;
+  const ctx=cv.getContext('2d');
+  function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);
+    t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+  function bb(T){ /* approximate sRGB of a blackbody at temperature T (K) */
+    const t=T/100;
+    const r=t<=66?255:329.7*Math.pow(t-60,-0.1332);
+    const g=t<=66?99.47*Math.log(t)-161.12:288.12*Math.pow(t-60,-0.0755);
+    const b=t>=66?255:(t<=19?0:138.52*Math.log(t-10)-305.04);
+    return [r,g,b].map(v=>Math.max(0,Math.min(255,v)));}
+  function temperature(u){ /* mostly white and blue-white, some pale yellow, few orange */
+    if(u<0.08) return 3300+u/0.08*900;
+    if(u<0.25) return 4200+(u-0.08)/0.17*1500;
+    if(u<0.70) return 5700+(u-0.25)/0.45*2300;
+    return 8000+(u-0.70)/0.30*7000;}
+  const SLOPE=0.35, M0=0, M1=6.5, TILT=-0.42;
+  const C0=Math.pow(10,SLOPE*M0), C1=Math.pow(10,SLOPE*M1);
+  function magnitude(u){ return Math.log10(C0+u*(C1-C0))/SLOPE; } /* inverse CDF of 10^(SLOPE m) on [M0, M1] */
+  function draw(){
+    const dpr=Math.min(window.devicePixelRatio||1,2), W=window.innerWidth, H=window.innerHeight, D=Math.hypot(W,H);
+    cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,W,H);
+    const rand=rng(20260308), phone=W<640;
+    /* barely visible diffuse band (a hint of the Milky Way): wide, soft, low contrast */
+    ctx.save(); ctx.translate(W*0.5,H*0.45); ctx.rotate(TILT);
+    const half=D*0.16, g=ctx.createLinearGradient(0,-half,0,half);
+    g.addColorStop(0,'rgba(200,210,235,0)'); g.addColorStop(0.5,'rgba(200,210,235,0.035)'); g.addColorStop(1,'rgba(200,210,235,0)');
+    ctx.fillStyle=g; ctx.fillRect(-D,-half,2*D,2*half); ctx.restore();
+    const n=Math.round(W*H/(phone?5200:3200)), extra=Math.round(n*0.35);
+    for(let i=0;i<n+extra;i++){
+      let x=rand()*W, y=rand()*H;
+      if(i>=n){ /* extra faint stars concentrated along the band */
+        const s=(rand()-0.5)*D, off=(rand()+rand()+rand()-1.5)*D*0.07;
+        x=W*0.5+s*Math.cos(TILT)-off*Math.sin(TILT); y=H*0.45+s*Math.sin(TILT)+off*Math.cos(TILT);}
+      let m=magnitude(rand()); if(i>=n) m=Math.max(m,4.5);
+      const [R,G,B]=bb(temperature(rand())).map(v=>Math.round(v*0.55+255*0.45));
+      if(x<0||x>W||y<0||y>H) continue;
+      const flux=Math.pow(10,-0.4*m), r=0.3+1.3*Math.sqrt(flux), a=Math.min(1,0.18+0.95*Math.pow(flux,0.35));
+      if(m<1.4){ /* only the brightest few: a very subtle soft halo */
+        const h=ctx.createRadialGradient(x,y,0,x,y,r*4);
+        h.addColorStop(0,`rgba(${R},${G},${B},0.16)`); h.addColorStop(1,`rgba(${R},${G},${B},0)`);
+        ctx.fillStyle=h; ctx.beginPath(); ctx.arc(x,y,r*4,0,6.2832); ctx.fill();}
+      ctx.fillStyle=`rgba(${R},${G},${B},${a.toFixed(3)})`; ctx.beginPath(); ctx.arc(x,y,r,0,6.2832); ctx.fill();
+    }
+  }
+  draw();
+  let last=window.innerWidth, timer;
+  window.addEventListener('resize',()=>{ if(Math.abs(window.innerWidth-last)<2) return; /* ignore phone toolbar height changes */
+    last=window.innerWidth; clearTimeout(timer); timer=setTimeout(draw,200);});
+})();
+</script>
 <script>
 /* Schematic [CI] spectrum (not data): two Gaussian lines at the observed frequencies, drawn statically. */
 (function(){
