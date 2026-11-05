@@ -17,7 +17,7 @@
 <meta property="og:locale" content="en_GB">
 <meta name="twitter:card" content="summary">
 <meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#05070f">
+<meta name="theme-color" content="#02040d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
@@ -25,8 +25,8 @@
 *,*::before,*::after{box-sizing:border-box}
 :root{
   color-scheme:dark;
-  --sky-top:#05070f;
-  --sky-bottom:#0b1226;
+  --sky-edge:#02040d;       /* near-black at the edges */
+  --sky-mid:#0a1638;        /* deep midnight blue */
   --panel:rgba(10,16,34,0.82);
   --panel-line:rgba(255,255,255,0.08);
   --inset:rgba(255,255,255,0.035);
@@ -39,9 +39,9 @@
   --font:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-/* the sky gradient sits on the root, so the fixed star canvas (z-index -1) paints above it */
+/* fallback sky on the root (shown before the script runs); the fixed canvas (z-index -1) paints the full sky above it */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:1rem;min-height:100%;
-  background:linear-gradient(180deg,var(--sky-top) 0%,var(--sky-bottom) 100%) fixed var(--sky-top)}
+  background:radial-gradient(ellipse at 50% 42%,var(--sky-mid) 0%,var(--sky-edge) 75%) fixed var(--sky-edge)}
 body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--font);font-size:1rem;line-height:1.65;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
   padding-bottom:env(safe-area-inset-bottom, 0px)}
@@ -291,10 +291,14 @@ footer{padding:.9rem 1.2rem;font-size:.8rem;color:var(--muted);display:flex;flex
 </div>
 
 <script>
-/* Night-sky background: one canvas, drawn once per viewport width with a fixed seed (same sky on every visit).
-   Magnitudes follow a power-law number count, dN/dm proportional to 10^(0.35 m), so faint stars dominate.
-   Colours come from blackbody temperatures, desaturated towards white as the eye sees them at night.
-   Star density falls off gently from the top of the screen towards the bottom. */
+/* Night-sky background, a deep-space view (no atmosphere): one canvas, drawn once per viewport width with a fixed
+   seed, so the sky is the same on every visit. No animation.
+   - Background: near-black at the edges deepening to midnight blue, with a very large, faint indigo glow in the upper
+     right.
+   - Stars: sharp points. Magnitudes follow a power-law number count, dN/dm proportional to 10^(0.35 m), so faint stars
+     dominate; colours are blackbody temperatures desaturated towards white. Only the very brightest have a tiny halo.
+   - Deep field: a few hundred faint, tiny background galaxies (ellipticals, discs and a few spiral smudges) with random
+     orientations and ellipticities: bluish star-forming ones, yellow-white ones and a few redder, more distant ones. */
 (function(){
   const cv=document.getElementById('sky'); if(!cv||!cv.getContext) return;
   const ctx=cv.getContext('2d');
@@ -311,35 +315,61 @@ footer{padding:.9rem 1.2rem;font-size:.8rem;color:var(--muted);display:flex;flex
     if(u<0.25) return 4200+(u-0.08)/0.17*1500;
     if(u<0.70) return 5700+(u-0.25)/0.45*2300;
     return 8000+(u-0.70)/0.30*7000;}
-  const SLOPE=0.35, M0=0, M1=6.5, TILT=-0.42;
+  const SLOPE=0.35, M0=0, M1=7;
   const C0=Math.pow(10,SLOPE*M0), C1=Math.pow(10,SLOPE*M1);
   function magnitude(u){ return Math.log10(C0+u*(C1-C0))/SLOPE; } /* inverse CDF of 10^(SLOPE m) on [M0, M1] */
+  const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a.toFixed(3)})`;
   function draw(){
-    const dpr=Math.min(window.devicePixelRatio||1,2), W=window.innerWidth, H=window.innerHeight, D=Math.hypot(W,H);
+    const dpr=Math.min(window.devicePixelRatio||1,2), W=window.innerWidth, H=window.innerHeight;
     cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
-    ctx.clearRect(0,0,W,H);
-    const rand=rng(20260308), phone=W<640;
-    /* barely visible diffuse band (a hint of the Milky Way): wide, soft, low contrast */
-    ctx.save(); ctx.translate(W*0.5,H*0.45); ctx.rotate(TILT);
-    const half=D*0.16, g=ctx.createLinearGradient(0,-half,0,half);
-    g.addColorStop(0,'rgba(200,210,235,0)'); g.addColorStop(0.5,'rgba(200,210,235,0.035)'); g.addColorStop(1,'rgba(200,210,235,0)');
-    ctx.fillStyle=g; ctx.fillRect(-D,-half,2*D,2*half); ctx.restore();
-    /* about twice the old density on average (the vertical fall-off rejects ~1/4 of candidates) */
-    const FALL=0.5, n=Math.round(W*H/(phone?2600:1600)/(1-FALL/2)), extra=Math.round(n*0.35);
-    for(let i=0;i<n+extra;i++){
-      let x=rand()*W, y=rand()*H;
-      if(i<n && rand()>1-FALL*y/H) continue; /* denser at the top, fading gently downwards */
-      if(i>=n){ /* extra faint stars concentrated along the band */
-        const s=(rand()-0.5)*D, off=(rand()+rand()+rand()-1.5)*D*0.07;
-        x=W*0.5+s*Math.cos(TILT)-off*Math.sin(TILT); y=H*0.45+s*Math.sin(TILT)+off*Math.cos(TILT);}
-      let m=magnitude(rand()); if(i>=n) m=Math.max(m,4.5);
+    const phone=W<640;
+
+    /* background: midnight blue towards the middle, near-black at the edges */
+    const bx=W*0.5, by=H*0.42, bg=ctx.createRadialGradient(bx,by,0,bx,by,Math.hypot(W,H)*0.62);
+    bg.addColorStop(0,'#0a1638'); bg.addColorStop(0.55,'#060d26'); bg.addColorStop(1,'#02040d');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+    /* faint indigo glow, very large and smooth, from the upper right */
+    const gx=W*0.88, gy=H*0.06, gr=Math.max(W,H)*0.8, glow=ctx.createRadialGradient(gx,gy,0,gx,gy,gr);
+    glow.addColorStop(0,'rgba(42,26,94,0.18)'); glow.addColorStop(0.45,'rgba(42,26,94,0.08)'); glow.addColorStop(1,'rgba(42,26,94,0)');
+    ctx.fillStyle=glow; ctx.fillRect(0,0,W,H);
+    /* dither: random near-transparent black/white pixels (256 px tile, below one 8-bit level on average)
+       so the smooth gradients do not show bands */
+    const tile=document.createElement('canvas'); tile.width=tile.height=256;
+    const tc=tile.getContext('2d'), td=tc.createImageData(256,256), dr=rng(99);
+    for(let i=0;i<td.data.length;i+=4){const v=dr()<0.5?0:255; td.data[i]=td.data[i+1]=td.data[i+2]=v; td.data[i+3]=Math.round(dr()*3);}
+    tc.putImageData(td,0,0);
+    ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.fillStyle=ctx.createPattern(tile,'repeat'); ctx.fillRect(0,0,cv.width,cv.height); ctx.restore();
+
+    /* deep field: faint, tiny background galaxies, drawn beneath the stars */
+    const grand=rng(20260311), nGal=phone?110:320;
+    const BLUE=[178,198,255], WHITE=[255,238,210], RED=[236,168,140];
+    for(let k=0;k<nGal;k++){
+      const x=grand()*W, y=grand()*H, size=2+6*Math.pow(grand(),2.2); /* 2-8 px across, mostly small */
+      const u=grand(), col=u<0.42?BLUE:u<0.85?WHITE:RED;
+      const spiral=size>4.5&&grand()<0.4, q=spiral?0.6+0.4*grand():0.3+0.7*grand(), ang=grand()*Math.PI;
+      const peak=(0.20+0.22*grand())*(col===RED?0.85:1), a=size/2;
+      ctx.save(); ctx.translate(x,y); ctx.rotate(ang); ctx.scale(1,q);
+      const g=ctx.createRadialGradient(0,0,0,0,0,a);
+      g.addColorStop(0,rgba(col,peak)); g.addColorStop(0.25,rgba(col,peak*0.7)); g.addColorStop(0.6,rgba(col,peak*0.25)); g.addColorStop(1,rgba(col,0));
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,a,0,6.2832); ctx.fill();
+      if(spiral){ /* two faint trailing arms (logarithmic spirals) */
+        ctx.strokeStyle=rgba(col,peak*0.6); ctx.lineWidth=0.7;
+        for(const s0 of [0,Math.PI]){ctx.beginPath();
+          for(let th=0;th<=2.41;th+=0.2){const r=a*0.3*Math.exp(0.5*th), px=r*Math.cos(th+s0), py=r*Math.sin(th+s0); th?ctx.lineTo(px,py):ctx.moveTo(px,py);}
+          ctx.stroke();}
+      }
+      ctx.restore();
+    }
+
+    /* stars: sharp points, roughly 2.5x the previous density */
+    const rand=rng(20260308), n=Math.round(W*H/(phone?720:430));
+    for(let i=0;i<n;i++){
+      const x=rand()*W, y=rand()*H, m=magnitude(rand());
       const [R,G,B]=bb(temperature(rand())).map(v=>Math.round(v*0.55+255*0.45));
-      if(x<0||x>W||y<0||y>H) continue;
-      /* ~1.5x brighter: alpha scaled by 1.5, and slightly larger discs so the brightest (already opaque) stars gain too */
-      const flux=Math.pow(10,-0.4*m), r=0.35+1.5*Math.sqrt(flux), a=Math.min(1,1.5*(0.18+0.95*Math.pow(flux,0.35)));
-      if(m<1.8){ /* the brightest few per cent: a small, very soft halo (no spikes) */
-        const hr=r*5, h=ctx.createRadialGradient(x,y,0,x,y,hr);
-        h.addColorStop(0,`rgba(${R},${G},${B},0.22)`); h.addColorStop(0.35,`rgba(${R},${G},${B},0.06)`); h.addColorStop(1,`rgba(${R},${G},${B},0)`);
+      const flux=Math.pow(10,-0.4*m), r=0.3+1.4*Math.sqrt(flux), a=Math.min(1,1.5*(0.16+0.95*Math.pow(flux,0.35)));
+      if(m<1.0){ /* only the very brightest few: a tiny soft halo, no spikes */
+        const hr=r*3.5, h=ctx.createRadialGradient(x,y,0,x,y,hr);
+        h.addColorStop(0,`rgba(${R},${G},${B},0.16)`); h.addColorStop(1,`rgba(${R},${G},${B},0)`);
         ctx.fillStyle=h; ctx.beginPath(); ctx.arc(x,y,hr,0,6.2832); ctx.fill();}
       ctx.fillStyle=`rgba(${R},${G},${B},${a.toFixed(3)})`; ctx.beginPath(); ctx.arc(x,y,r,0,6.2832); ctx.fill();
     }
