@@ -25,8 +25,7 @@
 *,*::before,*::after{box-sizing:border-box}
 :root{
   color-scheme:dark;
-  --sky-edge:#030a24;       /* deep navy */
-  --sky-mid:#0b1a45;        /* midnight blue */
+  --sky:#030a24;            /* uniform deep navy */
   --panel:rgba(10,16,34,0.86);
   --panel-line:rgba(255,255,255,0.08);
   --inset:rgba(255,255,255,0.035);
@@ -41,7 +40,7 @@
 
 /* fallback sky on the root (shown before the script runs); the fixed canvas (z-index -1) paints the full sky above it */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:1rem;min-height:100%;
-  background:linear-gradient(160deg,var(--sky-edge) 0%,var(--sky-mid) 100%) fixed var(--sky-edge)}
+  background:var(--sky)}
 body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--font);font-size:1rem;line-height:1.65;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
   padding-bottom:env(safe-area-inset-bottom, 0px)}
@@ -293,7 +292,7 @@ footer{padding:.9rem 1.2rem;font-size:.8rem;color:var(--muted);display:flex;flex
 <script>
 /* JWST-style deep field background: one canvas, drawn once per viewport with fixed seeds, so the sky is the same on
    every visit. No animation. All objects are procedural; no image is used.
-   - Background: deep navy to midnight blue, with one very large, faint indigo glow in the upper right.
+   - Background: one uniform deep navy.
    - Galaxies dominate, as in a NIRCam composite: dusty and high-redshift galaxies in orange, amber and gold, some deep
      red, nearby ellipticals in white and pale yellow, a few pale blue and violet. Light profiles are centrally
      concentrated, with random orientation and axis ratio. Positions are partly clustered, as real galaxies are; compact
@@ -359,21 +358,8 @@ footer{padding:.9rem 1.2rem;font-size:.8rem;color:var(--muted);display:flex;flex
     cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
     const phone=W<640, area=W*H;
 
-    /* background: deep navy at the top left to midnight blue at the bottom right */
-    const bg=ctx.createLinearGradient(W*.2,0,W*.8,H);
-    bg.addColorStop(0,'#030a24'); bg.addColorStop(1,'#0b1a45');
-    ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
-    /* faint indigo glow, very large and smooth, from the upper right */
-    const gx=W*0.88, gy=H*0.06, gr=Math.max(W,H)*0.8, glow=ctx.createRadialGradient(gx,gy,0,gx,gy,gr);
-    glow.addColorStop(0,'rgba(42,26,94,0.34)'); glow.addColorStop(0.45,'rgba(42,26,94,0.14)'); glow.addColorStop(1,'rgba(42,26,94,0)');
-    ctx.fillStyle=glow; ctx.fillRect(0,0,W,H);
-    /* dither: random near-transparent black/white pixels (256 px tile, below one 8-bit level on average)
-       so the smooth gradients do not show bands */
-    const tile=document.createElement('canvas'); tile.width=tile.height=256;
-    const tc=tile.getContext('2d'), td=tc.createImageData(256,256), dr=rng(99);
-    for(let i=0;i<td.data.length;i+=4){const v=dr()<0.5?0:255; td.data[i]=td.data[i+1]=td.data[i+2]=v; td.data[i+3]=Math.round(dr()*3);}
-    tc.putImageData(td,0,0);
-    ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.fillStyle=ctx.createPattern(tile,'repeat'); ctx.fillRect(0,0,cv.width,cv.height); ctx.restore();
+    /* background: one uniform deep navy (a flat colour cannot band, so no dither is needed) */
+    ctx.fillStyle='#030a24'; ctx.fillRect(0,0,W,H);
 
     /* the side margins beside the text column: spike stars and most large galaxies stay out of the column */
     const box=document.querySelector('.wrap').getBoundingClientRect();
