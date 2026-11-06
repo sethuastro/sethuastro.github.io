@@ -17,7 +17,7 @@
 <meta property="og:locale" content="en_GB">
 <meta name="twitter:card" content="summary">
 <meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#02040d">
+<meta name="theme-color" content="#030a24">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
@@ -25,9 +25,9 @@
 *,*::before,*::after{box-sizing:border-box}
 :root{
   color-scheme:dark;
-  --sky-edge:#02040d;       /* near-black at the edges */
-  --sky-mid:#0a1638;        /* deep midnight blue */
-  --panel:rgba(10,16,34,0.82);
+  --sky-edge:#030a24;       /* deep navy */
+  --sky-mid:#0b1a45;        /* midnight blue */
+  --panel:rgba(10,16,34,0.86);
   --panel-line:rgba(255,255,255,0.08);
   --inset:rgba(255,255,255,0.035);
   --ink:#e8ebf4;            /* body text */
@@ -41,7 +41,7 @@
 
 /* fallback sky on the root (shown before the script runs); the fixed canvas (z-index -1) paints the full sky above it */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:1rem;min-height:100%;
-  background:radial-gradient(ellipse at 50% 42%,var(--sky-mid) 0%,var(--sky-edge) 75%) fixed var(--sky-edge)}
+  background:linear-gradient(160deg,var(--sky-edge) 0%,var(--sky-mid) 100%) fixed var(--sky-edge)}
 body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--font);font-size:1rem;line-height:1.65;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
   padding-bottom:env(safe-area-inset-bottom, 0px)}
@@ -291,46 +291,81 @@ footer{padding:.9rem 1.2rem;font-size:.8rem;color:var(--muted);display:flex;flex
 </div>
 
 <script>
-/* Night-sky background, a deep-space view (no atmosphere): one canvas, drawn once per viewport width with a fixed
-   seed, so the sky is the same on every visit. No animation.
-   - Background: near-black at the edges deepening to midnight blue, with a very large, faint indigo glow in the upper
-     right.
-   - Stars: sharp points. Magnitudes follow a power-law number count, dN/dm proportional to 10^(0.35 m), so faint stars
-     dominate; colours are blackbody temperatures desaturated towards white. Only the very brightest have a tiny halo.
-   - Deep field: a few hundred faint, tiny background galaxies (ellipticals, discs and a few spiral smudges) with random
-     orientations and ellipticities: bluish star-forming ones, yellow-white ones and a few redder, more distant ones. */
+/* JWST-style deep field background: one canvas, drawn once per viewport with fixed seeds, so the sky is the same on
+   every visit. No animation. All objects are procedural; no image is used.
+   - Background: deep navy to midnight blue, with one very large, faint indigo glow in the upper right.
+   - Galaxies dominate, as in a NIRCam composite: dusty and high-redshift galaxies in orange, amber and gold, some deep
+     red, nearby ellipticals in white and pale yellow, a few pale blue and violet. Light profiles are centrally
+     concentrated, with random orientation and axis ratio. Positions are partly clustered, as real galaxies are; compact
+     groups share a colour (a red sequence).
+   - Stars are few and sharp. The 2-3 brightest show JWST's point-spread function: six main spikes and a faint short
+     horizontal pair. Spikes come from the telescope optics, so every star has the same orientation. */
 (function(){
+  const GALAXY_DENSITY=1; /* Variant 1 = 1; Variant 2 = 0.5 (the same sky with half the galaxies) */
   const cv=document.getElementById('sky'); if(!cv||!cv.getContext) return;
   const ctx=cv.getContext('2d');
   function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);
     t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
-  function bb(T){ /* approximate sRGB of a blackbody at temperature T (K) */
-    const t=T/100;
-    const r=t<=66?255:329.7*Math.pow(t-60,-0.1332);
-    const g=t<=66?99.47*Math.log(t)-161.12:288.12*Math.pow(t-60,-0.0755);
-    const b=t>=66?255:(t<=19?0:138.52*Math.log(t-10)-305.04);
-    return [r,g,b].map(v=>Math.max(0,Math.min(255,v)));}
-  function temperature(u){ /* mostly white and blue-white, some pale yellow, few orange */
-    if(u<0.08) return 3300+u/0.08*900;
-    if(u<0.25) return 4200+(u-0.08)/0.17*1500;
-    if(u<0.70) return 5700+(u-0.25)/0.45*2300;
-    return 8000+(u-0.70)/0.30*7000;}
-  const SLOPE=0.35, M0=0, M1=7;
-  const C0=Math.pow(10,SLOPE*M0), C1=Math.pow(10,SLOPE*M1);
-  function magnitude(u){ return Math.log10(C0+u*(C1-C0))/SLOPE; } /* inverse CDF of 10^(SLOPE m) on [M0, M1] */
   const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a.toFixed(3)})`;
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const mix=(c,d,t)=>c.map((v,i)=>Math.round(v+(d[i]-v)*t));
+  const CORE=[255,244,224]; /* galaxy centres lean towards warm white */
+  const GALAXY_BRIGHTNESS=1.25, GALAXY_SATURATION=1.2; /* rich, but short of neon */
+  const saturate=c=>{const g=.299*c[0]+.587*c[1]+.114*c[2]; return c.map(v=>Math.round(clamp(g+(v-g)*GALAXY_SATURATION,0,255)));};
+  /* colour, share of galaxies, size factor, brightness factor: high-redshift objects are smaller and fainter */
+  const PALETTE=[
+    {c:[236,134,66], w:.25,s:.98,b:1},  /* orange */
+    {c:[242,168,74], w:.21,s:1,  b:1},    /* amber */
+    {c:[238,198,104],w:.15,s:1.05,b:1},   /* gold */
+    {c:[190,72,52],  w:.11,s:.8, b:.95},  /* deep red */
+    {c:[240,236,226],w:.05,s:1.2,b:1}, /* white */
+    {c:[240,226,172],w:.08,s:1.15,b:1}, /* pale yellow */
+    {c:[170,192,232],w:.08,s:.9, b:.95},  /* pale blue */
+    {c:[168,138,236],w:.07,s:1,  b:1.15}    /* faint violet */
+  ];
+  function pick(u){ for(const p of PALETTE){ if(u<p.w) return p; u-=p.w; } return PALETTE[0]; }
+  const CONCENTRATED=[[0,1],[.1,.66],[.25,.34],[.5,.12],[.75,.03],[1,0]]; /* ellipticals, cores */
+  const EXPONENTIAL=[[0,1],[.18,.72],[.42,.36],[.7,.1],[1,0]];            /* discs */
+
+  function galaxy(x,y,size,q,ang,col,peak,profile,coreMix){
+    col=saturate(col); peak=Math.min(1,peak*GALAXY_BRIGHTNESS);
+    const a=size/2, core=mix(col,CORE,coreMix);
+    ctx.save(); ctx.translate(x,y); ctx.rotate(ang); ctx.scale(1,q);
+    const g=ctx.createRadialGradient(0,0,0,0,0,a);
+    profile.forEach(([r,f])=>g.addColorStop(r,rgba(r<.2?core:col,peak*f)));
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,a,0,6.2832); ctx.fill();
+    ctx.restore();
+  }
+  function spike(x,y,th,len,w,a){ /* a thin tapered wedge, fading along its length */
+    const c=[212,226,255];
+    ctx.save(); ctx.translate(x,y); ctx.rotate(th);
+    const g=ctx.createLinearGradient(0,0,len,0);
+    g.addColorStop(0,rgba(c,a)); g.addColorStop(.25,rgba(c,a*.55)); g.addColorStop(.65,rgba(c,a*.2)); g.addColorStop(1,rgba(c,0));
+    ctx.fillStyle=g; ctx.beginPath(); ctx.moveTo(0,-w/2); ctx.lineTo(len,-w/5); ctx.lineTo(len,w/5); ctx.lineTo(0,w/2); ctx.closePath(); ctx.fill();
+    ctx.restore();
+  }
+  function spikeStar(x,y,len){
+    const D=Math.PI/180;
+    for(const th of [90,30,-30,-90,-150,150]) spike(x,y,th*D,len,1,.7); /* six main spikes */
+    for(const th of [0,180]) spike(x,y,th*D,len*.42,.9,.55);               /* faint short horizontal pair */
+    const hr=Math.max(5,len*.24), h=ctx.createRadialGradient(x,y,0,x,y,hr);
+    h.addColorStop(0,'rgba(222,233,255,0.5)'); h.addColorStop(.35,'rgba(212,226,255,0.14)'); h.addColorStop(1,'rgba(212,226,255,0)');
+    ctx.fillStyle=h; ctx.beginPath(); ctx.arc(x,y,hr,0,6.2832); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(x,y,Math.max(1.1,len*.042),0,6.2832); ctx.fill();
+  }
+
   function draw(){
     const dpr=Math.min(window.devicePixelRatio||1,2), W=window.innerWidth, H=window.innerHeight;
     cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); ctx.setTransform(dpr,0,0,dpr,0,0);
-    const phone=W<640;
+    const phone=W<640, area=W*H;
 
-    /* background: midnight blue towards the middle, near-black at the edges */
-    const bx=W*0.5, by=H*0.42, bg=ctx.createRadialGradient(bx,by,0,bx,by,Math.hypot(W,H)*0.62);
-    bg.addColorStop(0,'#0a1638'); bg.addColorStop(0.55,'#060d26'); bg.addColorStop(1,'#02040d');
+    /* background: deep navy at the top left to midnight blue at the bottom right */
+    const bg=ctx.createLinearGradient(W*.2,0,W*.8,H);
+    bg.addColorStop(0,'#030a24'); bg.addColorStop(1,'#0b1a45');
     ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
     /* faint indigo glow, very large and smooth, from the upper right */
     const gx=W*0.88, gy=H*0.06, gr=Math.max(W,H)*0.8, glow=ctx.createRadialGradient(gx,gy,0,gx,gy,gr);
-    glow.addColorStop(0,'rgba(42,26,94,0.18)'); glow.addColorStop(0.45,'rgba(42,26,94,0.08)'); glow.addColorStop(1,'rgba(42,26,94,0)');
+    glow.addColorStop(0,'rgba(42,26,94,0.34)'); glow.addColorStop(0.45,'rgba(42,26,94,0.14)'); glow.addColorStop(1,'rgba(42,26,94,0)');
     ctx.fillStyle=glow; ctx.fillRect(0,0,W,H);
     /* dither: random near-transparent black/white pixels (256 px tile, below one 8-bit level on average)
        so the smooth gradients do not show bands */
@@ -340,44 +375,69 @@ footer{padding:.9rem 1.2rem;font-size:.8rem;color:var(--muted);display:flex;flex
     tc.putImageData(td,0,0);
     ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.fillStyle=ctx.createPattern(tile,'repeat'); ctx.fillRect(0,0,cv.width,cv.height); ctx.restore();
 
-    /* deep field: faint, tiny background galaxies, drawn beneath the stars */
-    const grand=rng(20260311), nGal=phone?110:320;
-    const BLUE=[178,198,255], WHITE=[255,238,210], RED=[236,168,140];
+    /* the side margins beside the text column: spike stars and most large galaxies stay out of the column */
+    const box=document.querySelector('.wrap').getBoundingClientRect();
+    const gutter=Math.min(box.left,W-box.right);
+    const inColumn=x=>x>box.left&&x<box.right;
+    const spikes=gutter>=48
+      ? [[gutter*.46,H*.21,Math.min(44,gutter*.44)],[W-gutter*.5,H*.62,Math.min(36,gutter*.36)],[gutter*.62,H*.87,Math.min(30,gutter*.3)]]
+      : [[gutter*.5,H*.3,14],[W-gutter*.5,H*.72,14]];
+    const nearSpike=(x,y)=>spikes.some(s=>Math.hypot(x-s[0],y-s[1])<s[2]*.9);
+
+    /* the field: a uniform population plus overdensities, so the sky does not read as even noise */
+    const grand=rng(20260311);
+    const nGal=Math.round((phone?clamp(area/1700,90,190):clamp(area/1600,500,950))*GALAXY_DENSITY);
+    const centres=[]; for(let i=0;i<30;i++) centres.push([grand(),grand(),40+70*grand()]);
     for(let k=0;k<nGal;k++){
-      const x=grand()*W, y=grand()*H, size=2+6*Math.pow(grand(),2.2); /* 2-8 px across, mostly small */
-      const u=grand(), col=u<0.42?BLUE:u<0.85?WHITE:RED;
-      const spiral=size>4.5&&grand()<0.4, q=spiral?0.6+0.4*grand():0.3+0.7*grand(), ang=grand()*Math.PI;
-      const peak=(0.20+0.22*grand())*(col===RED?0.85:1), a=size/2;
-      ctx.save(); ctx.translate(x,y); ctx.rotate(ang); ctx.scale(1,q);
-      const g=ctx.createRadialGradient(0,0,0,0,0,a);
-      g.addColorStop(0,rgba(col,peak)); g.addColorStop(0.25,rgba(col,peak*0.7)); g.addColorStop(0.6,rgba(col,peak*0.25)); g.addColorStop(1,rgba(col,0));
-      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,a,0,6.2832); ctx.fill();
-      if(spiral){ /* two faint trailing arms (logarithmic spirals) */
-        ctx.strokeStyle=rgba(col,peak*0.6); ctx.lineWidth=0.7;
-        for(const s0 of [0,Math.PI]){ctx.beginPath();
-          for(let th=0;th<=2.41;th+=0.2){const r=a*0.3*Math.exp(0.5*th), px=r*Math.cos(th+s0), py=r*Math.sin(th+s0); th?ctx.lineTo(px,py):ctx.moveTo(px,py);}
-          ctx.stroke();}
-      }
-      ctx.restore();
+      const clustered=grand()<.42, cen=centres[k%centres.length];
+      const r=Math.sqrt(-2*Math.log(1-grand()*.999))*cen[2]*(phone?.6:1), th=grand()*6.2832;
+      const ux=grand(), uy=grand();
+      const x=clustered?cen[0]*W+r*Math.cos(th):ux*W, y=clustered?cen[1]*H+r*Math.sin(th):uy*H;
+      const p=pick(grand()), u=grand(), kind=grand(), ang=grand()*Math.PI, uq=grand(), ub=grand(), lucky=grand();
+      if(nearSpike(x,y)) continue;
+      const streak=kind<.04;
+      const size=clamp((2.8+7.2*Math.pow(u,1.8))*p.s,2,10)*(streak?1.6:1);
+      const q=streak?.12+.1*uq:.35+.65*uq;
+      let peak=(.4+.3*ub+.2*(size-2)/8)*p.b;
+      if(lucky<.07) peak=Math.min(.95,peak+.3);          /* only a few are brighter */
+      galaxy(x,y,size,q,ang,p.c,peak,kind<.45?EXPONENTIAL:CONCENTRATED,.16);
     }
 
-    /* stars: sharp points, roughly 2.5x the previous density */
-    const rand=rng(20260308), n=Math.round(W*H/(phone?720:430));
-    for(let i=0;i<n;i++){
-      const x=rand()*W, y=rand()*H, m=magnitude(rand());
-      const [R,G,B]=bb(temperature(rand())).map(v=>Math.round(v*0.55+255*0.45));
-      const flux=Math.pow(10,-0.4*m), r=0.3+1.4*Math.sqrt(flux), a=Math.min(1,1.5*(0.16+0.95*Math.pow(flux,0.35)));
-      if(m<1.0){ /* only the very brightest few: a tiny soft halo, no spikes */
-        const hr=r*3.5, h=ctx.createRadialGradient(x,y,0,x,y,hr);
-        h.addColorStop(0,`rgba(${R},${G},${B},0.16)`); h.addColorStop(1,`rgba(${R},${G},${B},0)`);
-        ctx.fillStyle=h; ctx.beginPath(); ctx.arc(x,y,hr,0,6.2832); ctx.fill();}
-      ctx.fillStyle=`rgba(${R},${G},${B},${a.toFixed(3)})`; ctx.beginPath(); ctx.arc(x,y,r,0,6.2832); ctx.fill();
+    /* compact groups of 3-6 galaxies, sharing a colour */
+    const hrand=rng(20260412), nGroup=Math.round((phone?3:8)*GALAXY_DENSITY), GROUP=[PALETTE[1],PALETTE[2],PALETTE[5],PALETTE[0]];
+    for(let g=0;g<nGroup;g++){
+      const cx=hrand()*W, cy=hrand()*H, m=3+Math.floor(hrand()*4), col=GROUP[Math.floor(hrand()*GROUP.length)].c;
+      for(let i=0;i<m;i++){
+        const r=(i?5+13*hrand():0), th=hrand()*6.2832, x=cx+r*Math.cos(th), y=cy+r*Math.sin(th);
+        const size=i?2.5+4*hrand():6.5+2.5*hrand(), q=.45+.55*hrand(), ang=hrand()*Math.PI, peak=i?.34+.26*hrand():.62+.2*hrand();
+        if(!nearSpike(x,y)) galaxy(x,y,size,q,ang,col,peak,CONCENTRATED,.4);
+      }
     }
+
+    /* a few slightly larger, brighter, soft galaxies, mostly placed where the sky is visible */
+    const brand=rng(20260518), nBright=Math.round((phone?3:10)*GALAXY_DENSITY), BIG=[PALETTE[4],PALETTE[5],PALETTE[2],PALETTE[1],PALETTE[6]];
+    for(let i=0;i<nBright;i++){
+      let x=brand()*W; const y=brand()*H, retry=brand(), rx=brand();
+      if(inColumn(x)&&retry<.75&&gutter>=48) x=rx<.5?rx*2*box.left:box.right+(rx-.5)*2*(W-box.right);
+      const size=11+7*brand(), q=.45+.5*brand(), ang=brand()*Math.PI, p=BIG[i%BIG.length], peak=.62+.24*brand();
+      if(!nearSpike(x,y)) galaxy(x,y,size,q,ang,p.c,peak,i%2?EXPONENTIAL:CONCENTRATED,.5);
+    }
+
+    /* stars: few, sharp, blue-white and white; spike stars count towards the total */
+    const rand=rng(20260308), STAR=[[255,255,255],[232,240,255],[208,224,255]];
+    const nStar=(phone?clamp(area/16000,18,30):clamp(area/21000,40,80))-spikes.length;
+    for(let i=0;i<nStar;i++){
+      const x=rand()*W, y=rand()*H, f=rand(), c=STAR[Math.floor(rand()*3)];
+      ctx.fillStyle=rgba(c,.4+.55*f*f); ctx.beginPath(); ctx.arc(x,y,.45+.6*f*f*f,0,6.2832); ctx.fill();
+    }
+    spikes.forEach(s=>spikeStar(s[0],s[1],s[2]));
   }
   draw();
-  let last=window.innerWidth, timer;
-  window.addEventListener('resize',()=>{ if(Math.abs(window.innerWidth-last)<2) return; /* ignore phone toolbar height changes */
-    last=window.innerWidth; clearTimeout(timer); timer=setTimeout(draw,200);});
+  let lastW=window.innerWidth, lastH=window.innerHeight, timer;
+  window.addEventListener('resize',()=>{
+    const W=window.innerWidth, H=window.innerHeight;
+    if(Math.abs(W-lastW)<2&&(W<640||Math.abs(H-lastH)<2)) return; /* ignore phone toolbar height changes */
+    lastW=W; lastH=H; clearTimeout(timer); timer=setTimeout(draw,200);});
 })();
 </script>
 <script>
